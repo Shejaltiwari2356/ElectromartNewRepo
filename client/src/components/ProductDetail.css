@@ -1,4 +1,4 @@
-/* .product-detail-container {
+.product-detail-container {
   display: flex;
   gap: 2rem;
   margin: 20px;
@@ -6,7 +6,7 @@
 
 .image-gallery {
   display: flex;
-  /* flex-direction: column; */
+  /* flex-direction: column;
   gap: 1rem;
   margin-left: 5rem;
 }
@@ -62,4 +62,4 @@
 
 .thumbnail-list img:hover {
   opacity: 0.8;
-} */
+} 

@@ -1,73 +1,101 @@
+/* Navbar container */
 .navbar {
+  background-color: #2d2d2d;
+  color: white;
+  padding: 15px 30px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  background-color: #fff;
-  padding: 10px 20px;
-  border-bottom: 1px solid #ddd;
+  justify-content: space-between;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.navbar-brand {
+/* Logo styling */
+.logo {
   font-size: 24px;
   font-weight: bold;
-  color: #333;
-  cursor: pointer;
-}
-
-.navlink {
+  margin-left: 30px;
   text-decoration: none;
+  color: white;
 }
 
-.navbar-links {
-  display: flex;
+/* Navigation links styling */
+.nav-links {
   list-style: none;
-}
-
-.navbar-links li {
-  margin: 0 10px;
-}
-
-.navbar-links a {
-  text-decoration: none;
-  color: #333;
-  font-size: 16px;
-}
-
-.navbar-search {
   display: flex;
+  gap: 30px;
+  margin: 20px;
+  padding: 0;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: white;
+}
+
+.nav-link:hover {
+  color: #d1d1d1;
+}
+
+/* Search bar styling */
+.search-container {
+  display: flex;
+  flex: 0;
+  max-width: 600px;
+  margin: 0 20px; /* Space around search bar */
+}
+
+.search-form {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
   align-items: center;
+  width: 100%;
 }
 
-.navbar-search input {
-  padding: 5px;
-  font-size: 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.navbar-search button {
-  padding: 5px 10px;
-  font-size: 16px;
+.search-input {
+  background-color: #3a3a3a;
+  color: white;
   border: none;
-  background-color: #333;
-  color: #fff;
-  cursor: pointer;
-  border-radius: 4px;
-  margin-left: 5px;
+  padding: 10px;
+  border-radius: 5px 0 0 5px;
+  flex: 1;
 }
 
-.navbar-cart a {
-  text-decoration: none;
-  color: #333;
-  font-size: 16px;
+.search-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;  
 }
 
-.signin-login {
+.search-button:hover {
+  background-color: #0056b3;
+}
+
+/* Auth links styling */
+.auth-links {
   display: flex;
-  gap: 15px;
+  gap: 20px;
+  justify-content: space-evenly;
+  width: 17%;
 }
 
-.signin-login .navlink {
+.auth-link {
   text-decoration: none;
-  color: black;
+  color: white;
+}
+
+.auth-link:hover {
+  color: #d1d1d1;
+}
+
+svg {
+  display: inline;
+}
+
+.icon-and-text{
+  display: flex;
+  flex-direction:row;
 }

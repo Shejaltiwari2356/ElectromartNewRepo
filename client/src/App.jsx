@@ -7,6 +7,8 @@ import ProductList from "./components/ProductList";
 import ProductDetailPage from "./components/ProductDetailPage";
 import Search from "./components/Search";
 import Cart from "./pages/Cart";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function App() {
   return (
