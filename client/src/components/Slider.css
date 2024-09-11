@@ -1,0 +1,50 @@
+
+.slick-dots {
+  position: absolute;
+  bottom: 30px; /* Position of the dots */
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  text-align: center;
+}
+
+.slick-dots li {
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.slick-dots li button {
+  font-size: 0;
+  line-height: 0;
+  display: block;
+  width: 10px;
+  height: 10px;
+  padding: 5px;
+  cursor: pointer;
+  color: transparent;
+  border: 0;
+  outline: none;
+  background: transparent;
+}
+
+.slick-dots li button:before {
+  font-family: 'slick';
+  font-size: 10px;
+  line-height: 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  content: '•';  /* This will display dots */
+  text-align: center;
+  opacity: 0.25;
+  color: black; /* Change the color of dots here */
+}
+
+.slick-dots li.slick-active button:before {
+  opacity: 2;
+  color: black; /* Change the color of active dot here */
+}

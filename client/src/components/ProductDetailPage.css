@@ -1,0 +1,19 @@
+.product-detail-page {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.product-image-container {
+  flex: 1;
+  padding-right: 20px;
+}
+
+.product-detail-image {
+  width: 100%;
+  height: auto;
+}
+
+.product-info-container {
+  flex: 2;
+}
