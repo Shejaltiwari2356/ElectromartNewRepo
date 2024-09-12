@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -9,5 +9,23 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <!-- Botpress WebChat Scripts -->
+    <script src="https://cdn.botpress.cloud/webchat/v2/inject.js"></script>
+    <script src="https://mediafiles.botpress.cloud/1f8251f5-f029-4c4c-bf15-0694b4a56f53/webchat/v2/config.js"></script>
+
+    <script>
+      window.onload = () => {
+        if (window.botpress) {
+          window.botpress.init({
+            botId: "1f8251f5-f029-4c4c-bf15-0694b4a56f53",
+            hostUrl: "https://cdn.botpress.cloud/webchat/v2",
+            botName: "ElectroMart Assistant",
+            useSessionStorage: false,
+          });
+        } else {
+          console.error("Botpress WebChat script is not loaded.");
+        }
+      };
+    </script>
   </body>
 </html>

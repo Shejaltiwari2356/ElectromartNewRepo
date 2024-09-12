@@ -18,9 +18,9 @@
   position: relative;
 }
 
-.product-card:hover {
+/* .product-card:hover {
   transform: scale(1.05);
-}
+} */
 
 .badge {
   position: absolute;

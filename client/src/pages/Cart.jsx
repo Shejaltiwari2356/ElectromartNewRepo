@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { useAuth } from "../store/auth";
 import "./Cart.css";
 import { FaTrash } from "react-icons/fa";
@@ -8,6 +9,7 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
+  const navigate = useNavigate(); // Initialize useNavigate
   const token = localStorage.getItem("token"); // Retrieve token from local storage
 
   useEffect(() => {
@@ -119,13 +121,18 @@ const Cart = () => {
   };
 
   const { subtotal, tax, shipping, grandTotal } = calculateTotals();
-
+  
+  const handleCheckout = () => {
+    // Navigate to payment page
+    navigate("/payment", { state: { grandTotal, cartItems } });
+  };
+  
   if (loading) return <p>Loading...</p>;
 
   return (
     <div className="mx-auto max-w-7xl px-2 lg:px-0">
       <div className="mx-auto max-w-2xl py-8 lg:max-w-7xl">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+        <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
           Shopping Cart
         </h1>
         <form className="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
@@ -144,14 +151,14 @@ const Cart = () => {
                       <img
                         src={item.productId.image}
                         alt={item.productId.name}
-                        className="sm:h-38 sm:w-38 h-24 w-24 rounded-md object-contain object-center"
+                        className="sm:h-43 sm:w-45 h-28 w-30 rounded-md object-contain object-center"
                       />
                     </div>
                     <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
                       <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
                         <div>
                           <div className="flex justify-between">
-                            <h3 className="text-sm">
+                            <h3 className="text-base">
                               <a
                                 href={item.productId.href}
                                 className="font-semibold text-black"
@@ -160,15 +167,15 @@ const Cart = () => {
                               </a>
                             </h3>
                           </div>
-                          <div className="mt-1 flex text-sm">
-                            <p className="text-xs font-medium text-gray-500 line-through">
+                          <div className="mt-1 flex text-base">
+                            <p className="text-sm font-medium text-gray-500 line-through">
                               {item.productId.originalprice}
                             </p>
-                            <p className="text-sm font-medium text-gray-900">
+                            <p className="text-base font-medium text-gray-900">
                               &nbsp;&nbsp;{item.productId.offerprice}
                             </p>
                             &nbsp;&nbsp;
-                            <p className="text-sm font-medium text-green-500">
+                            <p className="text-base font-medium text-green-500">
                               {item.productId.discount}
                             </p>
                           </div>
@@ -179,7 +186,7 @@ const Cart = () => {
                       <div className="min-w-24 flex">
                         <button
                           type="button"
-                          className="h-7 w-7"
+                          className="h-8 w-8"
                           onClick={() =>
                             handleQuantityChange(
                               item.productId._id,
@@ -199,7 +206,7 @@ const Cart = () => {
                             )
                           }
                           min="1"
-                          className="mx-1 h-7 w-9 rounded-md border text-center"
+                          className="mx-1 h-8 w-10 rounded-md border text-center"
                         />
                         <button
                           type="button"
@@ -209,19 +216,19 @@ const Cart = () => {
                               item.quantity + 1
                             )
                           }
-                          className="flex h-7 w-7 items-center justify-center"
+                          className="flex h-8 w-8 items-center justify-center"
                         >
                           +
                         </button>
                       </div>
-                      <div className="ml-6 flex text-sm">
+                      <div className="ml-6 flex text-base">
                         <button
                           type="button"
                           className="flex items-center space-x-1 px-2 py-1 pl-0"
                           onClick={() => handleRemoveItem(item.productId._id)}
                         >
-                          <FaTrash size={12} className="text-red-500" />
-                          <span className="text-xs font-medium text-red-500">
+                          <FaTrash size={14} className="text-red-500" />
+                          <span className="text-sm font-medium text-red-500">
                             Remove
                           </span>
                         </button>
@@ -234,6 +241,7 @@ const Cart = () => {
               <p className="empty-cart-message">Your cart is empty.</p>
             )}
           </section>
+
           {/* Order summary */}
           {cartItems.length > 0 && (
             <section
@@ -249,36 +257,39 @@ const Cart = () => {
               <div>
                 <dl className="space-y-1 px-2 py-4">
                   <div className="flex items-center justify-between">
-                    <dt className="text-sm text-gray-800">Price </dt>
-                    <dd className="text-sm font-medium text-gray-900">
+                    <dt className="text-base text-gray-800">Price </dt>
+                    <dd className="text-base font-medium text-gray-900">
                       ₹{subtotal.toFixed(2)}
                     </dd>
                   </div>
                   <div className="flex items-center justify-between pt-4">
-                    <dt className="flex items-center text-sm text-gray-800">
+                    <dt className="flex items-center text-base text-gray-800">
                       <span>Tax (18%)</span>
                     </dt>
-                    <dd className="text-sm font-medium text-green-700">
+                    <dd className="text-base font-medium text-green-700">
                       + ₹{tax.toFixed(2)}
                     </dd>
                   </div>
                   <div className="flex items-center justify-between py-4">
-                    <dt className="flex text-sm text-gray-800">
+                    <dt className="flex text-base text-gray-800">
                       <span>Delivery Charges</span>
                     </dt>
-                    <dd className="text-sm font-medium text-green-700">Free</dd>
+                    <dd className="text-base font-medium text-green-700">
+                      Free
+                    </dd>
                   </div>
                   <div className="flex items-center justify-between border-y border-dashed py-4">
-                    <dt className="text-base font-medium text-gray-900">
+                    <dt className="text-lg font-medium text-gray-900">
                       Total Amount
                     </dt>
-                    <dd className="text-base font-medium text-gray-900">
+                    <dd className="text-lg font-medium text-gray-900">
                       ₹{grandTotal.toFixed(2)}
                     </dd>
                   </div>
                   <button
                     type="button"
-                    className="rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-600/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                    className="rounded-md bg-green-600 px-3 py-2 text-base font-semibold text-white shadow-sm hover:bg-green-600/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                    onClick={handleCheckout}
                   >
                     Proceed To Pay
                   </button>
