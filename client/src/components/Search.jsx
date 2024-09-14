@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
-import { ChevronDown } from "lucide-react";
-import "./Search.css"
+import { ChevronDown, ChevronUp, Loader } from "lucide-react";
 
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
@@ -13,119 +12,114 @@ const filters = [
     id: "brand",
     name: "Brand",
     options: [
-      { value: "white", label: "Samsung" },
-      { value: "beige", label: "Realme" },
-      { value: "blue", label: "Readmi" },
-      { value: "brown", label: "OnePlus" },
-      { value: "green", label: "iPhone" },
-      { value: "purple", label: "Motorola" },
+      { value: "samsung", label: "Samsung" },
+      { value: "realme", label: "Realme" },
+      { value: "readmi", label: "Readmi" },
+      { value: "oneplus", label: "OnePlus" },
+      { value: "iphone", label: "iPhone" },
+      { value: "motorola", label: "Motorola" },
     ],
   },
   {
     id: "price",
     name: "Price",
     options: [
-      { value: "new-arrivals", label: "All New Arrivals" },
-      { value: "tees", label: "Tees" },
-      { value: "crewnecks", label: "Crewnecks" },
-      { value: "sweatshirts", label: "Sweatshirts" },
-      { value: "pants-shorts", label: "Pants & Shorts" },
+      { value: "low", label: "Under $500" },
+      { value: "mid", label: "$500 - $1000" },
+      { value: "high", label: "$1000 - $2000" },
+      { value: "premium", label: "$2000 & Above" },
     ],
   },
   {
-    id: "Operating System",
+    id: "os",
     name: "Operating System",
     options: [
-      { value: "xs", label: "Android 10.0" },
-      { value: "s", label: "Android 11.0" },
-      { value: "m", label: "Android 12.0" },
-      { value: "l", label: "Android 13.0" },
-      { value: "xl", label: "iOS 8" },
-      { value: "2xl", label: "iOS 9" },
+      { value: "android10", label: "Android 10.0" },
+      { value: "android11", label: "Android 11.0" },
+      { value: "android12", label: "Android 12.0" },
+      { value: "android13", label: "Android 13.0" },
+      { value: "ios8", label: "iOS 8" },
+      { value: "ios9", label: "iOS 9" },
     ],
   },
   {
-    id: "Primary Camera",
+    id: "primary_camera",
     name: "Primary Camera",
     options: [
-      { value: "xs", label: "4-7.9 MP" },
-      { value: "s", label: "8-11.9 MP" },
-      { value: "m", label: "12-15.9 MP" },
-      { value: "l", label: "16 - 19.9 MP" },
-      { value: "xl", label: "20 - 23.9 MP" },
-      { value: "2xl", label: "32 & Above" },
-      
+      { value: "4mp", label: "4-7.9 MP" },
+      { value: "8mp", label: "8-11.9 MP" },
+      { value: "12mp", label: "12-15.9 MP" },
+      { value: "16mp", label: "16 - 19.9 MP" },
+      { value: "20mp", label: "20 - 23.9 MP" },
+      { value: "32mp", label: "32 & Above" },
     ],
   },
   {
-    id: "RAM Size",
+    id: "ram_size",
     name: "RAM Size",
     options: [
-      { value: "xs", label: "Up to 1.9 GB" },
-      { value: "s", label: "2 to 3.9 GB" },
-      { value: "m", label: "4 to 5.9 GB" },
-      { value: "l", label: "6 to 7.9 GB" },
-      { value: "xl", label: "8 to 9.9 GB" },
-      { value: "2xl", label: "10 GB & Above" },
-      
+      { value: "1gb", label: "Up to 1.9 GB" },
+      { value: "2gb", label: "2 to 3.9 GB" },
+      { value: "4gb", label: "4 to 5.9 GB" },
+      { value: "6gb", label: "6 to 7.9 GB" },
+      { value: "8gb", label: "8 to 9.9 GB" },
+      { value: "10gb", label: "10 GB & Above" },
     ],
   },
   {
-    id: "ROM Size",
+    id: "rom_size",
     name: "ROM Size",
     options: [
-      { value: "xs", label: "Up to 3.9 GB" },
-      { value: "s", label: "4 GB" },
-      { value: "m", label: "8 GB" },
-      { value: "l", label: "16 GB" },
-      { value: "xl", label: "32 GB" },
-      { value: "2xl", label: "64 GB" },
-      { value: "2xl", label: "128 GB" },
-      { value: "2xl", label: "256 GB" },
-      { value: "2xl", label: "512 GB & above" },
-      
-      
+      { value: "4gb", label: "Up to 4 GB" },
+      { value: "8gb", label: "8 GB" },
+      { value: "16gb", label: "16 GB" },
+      { value: "32gb", label: "32 GB" },
+      { value: "64gb", label: "64 GB" },
+      { value: "128gb", label: "128 GB" },
+      { value: "256gb", label: "256 GB" },
+      { value: "512gb", label: "512 GB & above" },
     ],
   },
   {
-    id: "Battery",
+    id: "battery",
     name: "Battery",
     options: [
-      { value: "xs", label: "Up to 2,999 mAh" },
-      { value: "s", label: "3,000 to 4,999 mAh" },
-      { value: "m", label: "5,000 to 5,999 mAh" },
-      { value: "l", label: "6,000 mAh & above" },
-  
+      { value: "3000mah", label: "Up to 2,999 mAh" },
+      { value: "5000mah", label: "3,000 to 4,999 mAh" },
+      { value: "6000mah", label: "5,000 to 5,999 mAh" },
+      { value: "6000mah+", label: "6,000 mAh & above" },
     ],
   },
   {
-    id: "Display Type",
+    id: "display_type",
     name: "Display Type",
     options: [
-      { value: "xs", label: "AMOLED" },
-      { value: "s", label: "LCD" },
-      { value: "m", label: "OLED" },
+      { value: "amoled", label: "AMOLED" },
+      { value: "lcd", label: "LCD" },
+      { value: "oled", label: "OLED" },
     ],
   },
 ];
 
 const Search = () => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [activeFilter, setActiveFilter] = useState(null);
   const query = useQuery().get("q");
-  console.log("Query parameter:", query);
 
   useEffect(() => {
     const fetchResults = async () => {
+      setLoading(true);
       try {
         const response = await axios.get(
           `http://localhost:5001/api/auth/search?q=${query}`
         );
-        console.log("Response data:", response.data); // Inspect the response data
-        setProducts(response.data); // Assuming the response.data is an array of products
+        setProducts(response.data);
       } catch (error) {
-        console.error("Error fetching search results", error);
         setError("Failed to fetch search results. Please try again.");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -134,83 +128,117 @@ const Search = () => {
     }
   }, [query]);
 
-  console.log("Products state:", products);
+  // Toggle filter visibility
+  const toggleFilter = (id) => {
+    setActiveFilter(activeFilter === id ? null : id);
+  };
+
   return (
-    <section className="w-full">
-      <div className="mx-auto max-w-7xl px-2 py-10 lg:px-10">
-        {/* Top */}
-        <div className="md:flex md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-xl font-bold">Products</h1>
-          </div>
-          
+    <section className="w-full min-h-screen bg-gray-50 py-10">
+      <div className="mx-auto max-w-7xl px-4 lg:px-10">
+        {/* Header */}
+        <div className="flex justify-between items-center pb-6">
+          <h1 className="text-4xl font-bold text-gray-900 tracking-tight">
+            Products
+          </h1>
         </div>
-        <hr className="my-8" />
-        <div className="lg:grid lg:grid-cols-12 lg:gap-x-6">
-          <div className="hidden space-y-6 divide-y lg:col-span-3 lg:block">
+
+        {/* Filters & Products */}
+        <div className="lg:grid lg:grid-cols-12 lg:gap-x-8">
+          {/* Sidebar (Filters) */}
+          <aside className="lg:col-span-3 space-y-4">
             {filters.map((filter) => (
-              <div key={filter.id} className="pt-6">
-                <h3 className="text-lg font-semibold text-gray-900">
+              <div key={filter.id} className="bg-white rounded-lg shadow-lg p-4">
+                <button
+                  onClick={() => toggleFilter(filter.id)}
+                  className="flex justify-between w-full items-center text-lg font-semibold text-gray-800"
+                >
                   {filter.name}
-                </h3>
-                <ul className="mt-2">
-                  {filter.options.map((option) => (
-                    <li
-                      key={option.value}
-                      className="flex items-center justify-between py-2"
-                    >
-                      <div className="flex items-center">
+                  {activeFilter === filter.id ? (
+                    <ChevronUp className="h-5 w-5 text-gray-500" />
+                  ) : (
+                    <ChevronDown className="h-5 w-5 text-gray-500" />
+                  )}
+                </button>
+
+                <div className={`${activeFilter === filter.id ? "block" : "hidden"} mt-4`}>
+                  <ul className="space-y-3">
+                    {filter.options.map((option) => (
+                      <li key={option.value} className="flex items-center">
                         <input
                           id={`${filter.id}-${option.value}`}
                           name={`${filter.id}[]`}
-                          defaultValue={option.value}
+                          value={option.value}
                           type="checkbox"
-                          className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
+                          className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                         />
                         <label
                           htmlFor={`${filter.id}-${option.value}`}
-                          className="ml-3 text-sm font-medium text-gray-900"
+                          className="ml-3 text-sm text-gray-600"
                         >
                           {option.label}
                         </label>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             ))}
-          </div>
-          <div className="h-[400px] w-full rounded-lg border-2 border-dashed px-2 lg:col-span-9 lg:h-full">
-            <div className="product-list">
-              {error && <p className="error-message">{error}</p>}
-              {Array.isArray(products) && products.length > 0 ? (
-                products.map((product) => (
-                  <div className="product-card" key={product._id}>
+          </aside>
+
+          {/* Products */}
+          <div className="lg:col-span-9">
+            {loading ? (
+              <div className="flex justify-center items-center h-80">
+                <Loader className="animate-spin h-12 w-12 text-indigo-600" />
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
+                {error && (
+                  <div className="col-span-full text-center text-red-600 font-semibold">
+                    {error}
+                  </div>
+                )}
+                {Array.isArray(products) && products.length > 0 ? (
+                  products.map((product) => (
                     <Link
                       to={`/products/${product._id}`}
-                      className="product-link"
+                      key={product._id}
+                      className="group block bg-white rounded-lg shadow-lg hover:shadow-2xl transform transition duration-300 hover:scale-105"
                     >
-                      <div className="badge">New Launch</div>
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="product-image"
-                      />
-                      <h2 className="product-name">{product.name}</h2>
-                      <div className="price">
-                        {product.offerprice}{" "}
-                        <span className="original-price">
-                          {product.originalprice}
-                        </span>{" "}
-                        <span className="discount">{product.discount} off</span>
+                      <div className="relative overflow-hidden">
+                        <div className="absolute top-2 right-2 bg-indigo-600 text-white px-2 py-1 rounded-full text-xs font-semibold animate-pulse">
+                          New Launch
+                        </div>
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="h-60 w-full object-cover rounded-t-lg"
+                        />
+                      </div>
+                      <div className="p-4">
+                        <h2 className="text-xl font-semibold text-gray-900 group-hover:text-indigo-600 transition">
+                          {product.name}
+                        </h2>
+                        <div className="mt-2 text-2xl font-bold text-indigo-600">
+                          {product.offerprice}
+                          <span className="ml-2 text-sm text-gray-500 line-through">
+                            {product.originalprice}
+                          </span>
+                        </div>
+                        <div className="mt-1 text-sm text-green-500 font-semibold">
+                          {product.discount} off
+                        </div>
                       </div>
                     </Link>
+                  ))
+                ) : (
+                  <div className="col-span-full text-center text-gray-500">
+                    No results found.
                   </div>
-                ))
-              ) : (
-                <p>No results found.</p>
-              )}
-            </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
