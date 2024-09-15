@@ -23,10 +23,10 @@ export const Navbar = () => {
       {/* Links */}
       <ul className="nav-links">
         <li><NavLink to="/" className="nav-link">All Categories</NavLink></li>
-        <li><NavLink to="/contact" className="nav-link">Brands</NavLink></li>
-        <li><NavLink to="/special" className="nav-link">Contact</NavLink></li>
-        <li><NavLink to="/bestseller" className="nav-link">Repair & Service</NavLink></li>
-        <li><NavLink to="/newarrivals" className="nav-link">Wishlist</NavLink></li>
+        <li><NavLink to="/brands" className="nav-link">Brands</NavLink></li>
+        <li><NavLink to="/contact" className="nav-link">Contact</NavLink></li>
+        <li><NavLink to="/service" className="nav-link">Repair & Service</NavLink></li>
+        <li><NavLink to="/wishlist" className="nav-link">Wishlist</NavLink></li>
       </ul>
 
       {/* Search Bar */}
