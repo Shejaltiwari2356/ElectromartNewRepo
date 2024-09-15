@@ -1,6 +1,7 @@
 /* Navbar container */
 .navbar {
   background-color: #2d2d2d;
+  /* background-color: #2d3748; */
   color: white;
   padding: 15px 30px;
   display: flex;
@@ -67,7 +68,7 @@
   border: none;
   padding: 10px 20px;
   border-radius: 0 5px 5px 0;
-  cursor: pointer;  
+  cursor: pointer;
 }
 
 .search-button:hover {
