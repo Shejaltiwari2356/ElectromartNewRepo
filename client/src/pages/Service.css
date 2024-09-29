@@ -1,63 +1,57 @@
-.service-page {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #f9f9f9;
+/* Cart.css */
+
+.container {
+  max-width: 1200px;
 }
 
-h1,
-h2 {
-  color: #333;
-  text-align: center;
+.bg-white {
+  background-color: #ffffff;
 }
 
-.product-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
+.rounded-lg {
+  border-radius: 0.5rem;
 }
 
-.product-item {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 5px;
-  text-align: center;
-  width: 250px;
+.shadow-lg {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-  border-radius: 5px;
-  margin-top: 10px;
+.hover\:bg-gray-50:hover {
+  background-color: #f9fafb;
 }
 
-button:hover {
-  background-color: #0056b3;
+.transition {
+  transition: all 0.3s ease;
 }
 
-.service-form {
-  margin-top: 20px;
-  padding: 20px;
-  background-color: #f1f1f1;
-  border-radius: 5px;
+.text-gray-800 {
+  color: #2d3748;
 }
 
-textarea {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  border-radius: 5px;
+.text-gray-600 {
+  color: #718096;
 }
 
-.confirmation-message {
-  text-align: center;
-  color: green;
-  font-size: 1.2em;
-  margin-top: 20px;
+.text-green-600 {
+  color: #38a169;
+}
+
+.text-blue-600 {
+  color: #3182ce;
+}
+
+.bg-gray-200 {
+  background-color: #edf2f7;
+}
+
+.bg-gray-100 {
+  background-color: #f7fafc;
+}
+
+.border-gray-200 {
+  border-color: #e2e8f0;
+}
+
+.border-gray-300 {
+  border-color: #d2d6dc;
 }

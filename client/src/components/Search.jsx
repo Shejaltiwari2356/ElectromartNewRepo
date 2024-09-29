@@ -105,7 +105,7 @@ const Search = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [activeFilter, setActiveFilter] = useState(null);
+  const [activeFilters, setActiveFilters] = useState([]); // Changed from activeFilter to activeFilters
   const query = useQuery().get("q");
 
   useEffect(() => {
@@ -130,7 +130,11 @@ const Search = () => {
 
   // Toggle filter visibility
   const toggleFilter = (id) => {
-    setActiveFilter(activeFilter === id ? null : id);
+    setActiveFilters((prev) =>
+      prev.includes(id)
+        ? prev.filter((filterId) => filterId !== id)
+        : [...prev, id]
+    );
   };
 
   return (
@@ -157,7 +161,7 @@ const Search = () => {
                   className="flex justify-between w-full items-center text-lg font-semibold text-gray-800"
                 >
                   {filter.name}
-                  {activeFilter === filter.id ? (
+                  {activeFilters.includes(filter.id) ? ( // Changed from activeFilter to activeFilters
                     <ChevronUp className="h-5 w-5 text-gray-500" />
                   ) : (
                     <ChevronDown className="h-5 w-5 text-gray-500" />
@@ -166,9 +170,11 @@ const Search = () => {
 
                 <div
                   className={`${
-                    activeFilter === filter.id ? "block" : "hidden"
+                    activeFilters.includes(filter.id) ? "block" : "hidden"
                   } mt-4`}
                 >
+                  {" "}
+                  {/* Changed from activeFilter to activeFilters */}
                   <ul className="space-y-3">
                     {filter.options.map((option) => (
                       <li key={option.value} className="flex items-center">

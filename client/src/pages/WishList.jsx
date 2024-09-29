@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../store/auth";
-import "./WishList.css";
+import { FaTrash } from "react-icons/fa";
+// import "./WishList.css";
 
 const WishList = () => {
   const [cartItems, setCartItems] = useState([]);
-  const [loading, setLoading] = useState(false);
   const { user } = useAuth();
-  const token = localStorage.getItem("token"); // Retrieve token from local storage
-  const navigate = useNavigate(); // Initialize useNavigate
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -20,59 +20,54 @@ const WishList = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:5001/api/cart/${user._id}`,
+          `http://localhost:5001/api/wishlist/${user._id}`,
           {
             headers: {
-              Authorization: `Bearer ${token}`, // Include token in headers
+              Authorization: `Bearer ${token}`,
             },
           }
         );
-
-        // Debugging: Check the data received
-        console.log("Cart items fetched:", response.data);
-
         setCartItems(response.data.products || []);
       } catch (error) {
-        console.error("Error fetching cart items:", error);
+        console.error("Error fetching wishlist items:", error);
       }
     };
 
     fetchCartItems();
-  }, [user, token]); // Depend on user and token
+  }, [user, token]);
 
   const handleRemoveItem = async (productId) => {
     try {
       const response = await axios.delete(
-        "http://localhost:5001/api/cart/remove",
+        "http://localhost:5001/api/wishlist/remove",
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include token in headers
+            Authorization: `Bearer ${token}`,
           },
           data: { userId: user._id, productId },
         }
       );
-      console.log("Remove item response:", response.data);
       if (response.status === 200) {
         setCartItems((prevItems) =>
           prevItems.filter((item) => item.productId._id !== productId)
         );
       } else {
-        console.error("Failed to remove item from cart:", response);
+        console.error("Failed to remove item from wishlist:", response);
       }
     } catch (error) {
-      console.error("Error removing item from cart:", error);
+      console.error("Error removing item from wishlist:", error);
     }
   };
 
   const handleQuantityChange = async (productId, newQuantity) => {
-    if (newQuantity < 1) return; // Prevent setting quantity less than 1
+    if (newQuantity < 1) return;
     try {
       const response = await axios.put(
-        "http://localhost:5001/api/cart/update",
+        "http://localhost:5001/api/wishlist/update",
         { userId: user._id, productId, quantity: newQuantity },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include token in headers
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -93,25 +88,40 @@ const WishList = () => {
   };
 
   return (
-    <div className="cart-container">
-      <h1 className="cart-title">Wishlist Items</h1>
-      <div className="cart-items">
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <h1 className="text-4xl font-extrabold text-gray-900 mb-12 text-center">
+        <span className="text-teal-600">Your</span> Wishlist
+      </h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12">
         {cartItems.length > 0 ? (
           cartItems.map((item) => (
-            <div className="cart-item" key={item.productId._id}>
-              <img
-                src={item.productId.image}
-                alt={item.productId.name}
-                className="cart-item-image"
-              />
-              <div className="cart-item-details">
-                <h2 className="cart-item-name">{item.productId.name}</h2>
-                <div className="cart-item-price">
+            <div
+              key={item.productId._id}
+              className="bg-white shadow-lg rounded-lg overflow-hidden transform transition-transform hover:scale-105 hover:shadow-xl"
+            >
+              <div className="relative">
+                <img
+                  src={item.productId.image}
+                  alt={item.productId.name}
+                  className="w-full h-60 object-cover rounded-t-lg"
+                />
+                <button
+                  className="absolute top-4 right-4 bg-red-600 text-white rounded-full p-3 hover:bg-red-700 transition-colors"
+                  onClick={() => handleRemoveItem(item.productId._id)}
+                >
+                  <FaTrash size={24} />
+                </button>
+              </div>
+              <div className="p-6 space-y-4">
+                <h2 className="text-2xl font-bold text-gray-800">
+                  {item.productId.name}
+                </h2>
+                <p className="text-xl font-semibold text-gray-700">
                   {item.productId.offerprice}
-                </div>
-                <div className="cart-item-quantity">
+                </p>
+                <div className="flex items-center space-x-6">
                   <button
-                    className="quantity-button"
+                    className="bg-gray-300 text-gray-800 px-4 py-2 rounded-full hover:bg-gray-400 transition-colors"
                     onClick={() =>
                       handleQuantityChange(
                         item.productId._id,
@@ -131,10 +141,10 @@ const WishList = () => {
                       )
                     }
                     min="1"
-                    className="quantity-input"
+                    className="w-20 text-center border border-gray-300 rounded-md py-2"
                   />
                   <button
-                    className="quantity-button"
+                    className="bg-gray-300 text-gray-800 px-4 py-2 rounded-full hover:bg-gray-400 transition-colors"
                     onClick={() =>
                       handleQuantityChange(
                         item.productId._id,
@@ -145,25 +155,18 @@ const WishList = () => {
                     +
                   </button>
                 </div>
-                <div className="cart-item-subtotal">
-                  Subtotal: ₹
-                  {(
-                    parseFloat(
-                      item.productId.offerprice.replace(/[^0-9.-]+/g, "")
-                    ) * item.quantity
-                  ).toFixed(2)}
-                </div>
-                <button
-                  className="remove-item-button"
-                  onClick={() => handleRemoveItem(item.productId._id)}
-                >
-                  Remove
-                </button>
+                <p className="text-sm text-gray-500">
+                  <span className="font-semibold">Adjust Quantity</span>
+                  {/* Click the
+                  "+" or "-" to adjust the quantity. */}
+                </p>
               </div>
             </div>
           ))
         ) : (
-          <p className="empty-cart-message">Your wishlist is empty.</p>
+          <p className="text-gray-600 text-center col-span-full">
+            Your wishlist is currently empty.
+          </p>
         )}
       </div>
     </div>

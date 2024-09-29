@@ -17,7 +17,6 @@ const filters = [
       { value: "sony", label: "Sony" },
       { value: "panasonic", label: "Panasonic" },
       { value: "tcl", label: "TCL" },
-      // Add more brands as needed
     ],
   },
   {
@@ -93,11 +92,11 @@ const filters = [
   },
 ];
 
-const Search = () => {
+const TvSearch = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [activeFilter, setActiveFilter] = useState(null);
+  const [activeFilters, setActiveFilters] = useState(new Set());
   const query = useQuery().get("q");
 
   useEffect(() => {
@@ -122,7 +121,15 @@ const Search = () => {
 
   // Toggle filter visibility
   const toggleFilter = (id) => {
-    setActiveFilter(activeFilter === id ? null : id);
+    setActiveFilters((prev) => {
+      const updatedFilters = new Set(prev);
+      if (updatedFilters.has(id)) {
+        updatedFilters.delete(id);
+      } else {
+        updatedFilters.add(id);
+      }
+      return updatedFilters;
+    });
   };
 
   return (
@@ -149,7 +156,7 @@ const Search = () => {
                   className="flex justify-between w-full items-center text-lg font-semibold text-gray-800"
                 >
                   {filter.name}
-                  {activeFilter === filter.id ? (
+                  {activeFilters.has(filter.id) ? (
                     <ChevronUp className="h-5 w-5 text-gray-500" />
                   ) : (
                     <ChevronDown className="h-5 w-5 text-gray-500" />
@@ -158,7 +165,7 @@ const Search = () => {
 
                 <div
                   className={`${
-                    activeFilter === filter.id ? "block" : "hidden"
+                    activeFilters.has(filter.id) ? "block" : "hidden"
                   } mt-4`}
                 >
                   <ul className="space-y-3">
