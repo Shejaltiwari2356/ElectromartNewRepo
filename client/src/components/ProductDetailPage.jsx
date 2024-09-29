@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
-import ProductDetail from "./ProductDetail";
+import MobileDetail from "./MobileDetail";
+import WashingMachineDetail from "./WashingMachineDetail";
+import LaptopDetail from "./LaptopDetail"; // Import LaptopDetail
+import ACDetail from "./AcDetail"; // Import ACDetail
+import TVDetail from "./TVDetail"; // Import TVDetail
 import { useParams } from "react-router-dom";
 import "./ProductDetailPage.css";
 
@@ -34,18 +38,27 @@ const ProductDetailPage = () => {
   if (error) return <p>Error: {error.message}</p>;
   if (!product) return <p>No product found</p>;
 
+  const renderProductDetail = () => {
+    switch (product.category) {
+      case "mobiles":
+        return <MobileDetail {...product} />;
+      case "washingmachines":
+        return <WashingMachineDetail {...product} />;
+      case "laptops": // Case for laptops
+        return <LaptopDetail {...product} />;
+      case "acs": // Case for ACs
+        return <ACDetail {...product} />;
+      case "tvs": // Added case for TVs
+        return <TVDetail {...product} />;
+      // Add more cases for additional categories as needed
+      default:
+        return <p>Product category not supported.</p>;
+    }
+  };
+
   return (
     <div className="product-detail-page">
-      {/* <div className="product-image-container">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="product-detail-image"
-        />
-      </div> */}
-      <div className="product-info-container">
-        <ProductDetail {...product} />
-      </div>
+      <div className="product-info-container">{renderProductDetail()}</div>
     </div>
   );
 };

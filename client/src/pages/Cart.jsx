@@ -18,28 +18,29 @@ const Cart = () => {
         console.error("User is not logged in.");
         return;
       }
+      setLoading(true); // Start loading
 
       try {
         const response = await axios.get(
           `http://localhost:5001/api/cart/${user._id}`,
           {
             headers: {
-              Authorization: `Bearer ${token}`, // Include token in headers
+              Authorization: `Bearer ${token}`,
             },
           }
         );
 
-        // Debugging: Check the data received
         console.log("Cart items fetched:", response.data);
-
         setCartItems(response.data.products || []);
       } catch (error) {
         console.error("Error fetching cart items:", error);
+      } finally {
+        setLoading(false); // Stop loading
       }
     };
 
     fetchCartItems();
-  }, [user, token]); // Depend on user and token
+  }, [user, token]);
 
   const handleRemoveItem = async (productId) => {
     try {
@@ -95,19 +96,21 @@ const Cart = () => {
 
   const calculateTotals = () => {
     const subtotal = cartItems.reduce((total, item) => {
-      const offerpriceString = item.productId.offerprice || "0"; // Fallback to "0" if offerprice is undefined
-      let offerprice = parseFloat(offerpriceString.replace(/[^0-9.-]+/g, ""));
-
-      // Check if offerprice is valid, otherwise set it to 0
-      if (isNaN(offerprice)) {
-        console.error(
-          "Invalid offerprice detected, setting to 0:",
-          offerpriceString
-        );
-        offerprice = 0;
+      if (
+        !item ||
+        !item.productId ||
+        !item.productId.offerprice ||
+        !item.quantity
+      ) {
+        console.warn("Invalid item detected, skipping:", item);
+        return total; // Skip invalid item
       }
 
-      const quantity = parseInt(item.quantity, 10);
+      const offerpriceString = item.productId.offerprice || "0";
+      let offerprice =
+        parseFloat(offerpriceString.replace(/[^0-9.-]+/g, "")) || 0; // Ensure it falls back to 0
+
+      const quantity = parseInt(item.quantity, 10) || 0; // Fallback to 0 if quantity is invalid
 
       return total + offerprice * quantity;
     }, 0);
@@ -116,17 +119,17 @@ const Cart = () => {
     const shipping = subtotal > 1000 ? 0 : 50; // Free shipping for orders over 1000
     const grandTotal = subtotal + tax + shipping;
 
-    console.log({ subtotal, tax, shipping, grandTotal }); // Debugging totals
+    console.log({ subtotal, tax, shipping, grandTotal });
     return { subtotal, tax, shipping, grandTotal };
   };
 
   const { subtotal, tax, shipping, grandTotal } = calculateTotals();
-  
+
   const handleCheckout = () => {
     // Navigate to payment page
     navigate("/payment", { state: { grandTotal, cartItems } });
   };
-  
+
   if (loading) return <p>Loading...</p>;
 
   return (
@@ -145,97 +148,106 @@ const Cart = () => {
             </h2>
             {cartItems.length > 0 ? (
               <ul role="list" className="divide-y divide-gray-200">
-                {cartItems.map((item) => (
-                  <li key={item.productId._id} className="flex py-6 sm:py-6">
-                    <div className="flex-shrink-0">
-                      <img
-                        src={item.productId.image}
-                        alt={item.productId.name}
-                        className="sm:h-43 sm:w-45 h-28 w-30 rounded-md object-contain object-center"
-                      />
-                    </div>
-                    <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
-                      <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
-                        <div>
-                          <div className="flex justify-between">
-                            <h3 className="text-base">
-                              <a
-                                href={item.productId.href}
-                                className="font-semibold text-black"
-                              >
-                                {item.productId.name}
-                              </a>
-                            </h3>
-                          </div>
-                          <div className="mt-1 flex text-base">
-                            <p className="text-sm font-medium text-gray-500 line-through">
-                              {item.productId.originalprice}
-                            </p>
-                            <p className="text-base font-medium text-gray-900">
-                              &nbsp;&nbsp;{item.productId.offerprice}
-                            </p>
-                            &nbsp;&nbsp;
-                            <p className="text-base font-medium text-green-500">
-                              {item.productId.discount}
-                            </p>
+                {cartItems.map((item) =>
+                  item && item.productId ? ( // Ensure item and productId are valid
+                    <li key={item.productId._id} className="flex py-6 sm:py-6">
+                      <div className="flex-shrink-0">
+                        <img
+                          src={item.productId.image}
+                          alt={item.productId.name}
+                          className="sm:h-43 sm:w-45 h-28 w-30 rounded-md object-contain object-center"
+                        />
+                      </div>
+                      <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
+                        <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
+                          <div>
+                            <div className="flex justify-between">
+                              <h3 className="text-base">
+                                <a
+                                  href={item.productId.href}
+                                  className="font-semibold text-black"
+                                >
+                                  {item.productId.name}
+                                </a>
+                              </h3>
+                            </div>
+                            <div className="mt-1 flex text-base">
+                              <p className="text-sm font-medium text-gray-500 line-through">
+                                {item.productId.originalprice}
+                              </p>
+                              <p className="text-base font-medium text-gray-900">
+                                &nbsp;&nbsp;{item.productId.offerprice}
+                              </p>
+                              &nbsp;&nbsp;
+                              <p className="text-base font-medium text-green-500">
+                                {item.productId.discount}
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="mb-2 flex">
-                      <div className="min-w-24 flex">
-                        <button
-                          type="button"
-                          className="h-8 w-8"
-                          onClick={() =>
-                            handleQuantityChange(
-                              item.productId._id,
-                              item.quantity - 1
-                            )
-                          }
-                        >
-                          -
-                        </button>
-                        <input
-                          type="number"
-                          value={item.quantity}
-                          onChange={(e) =>
-                            handleQuantityChange(
-                              item.productId._id,
-                              Number(e.target.value)
-                            )
-                          }
-                          min="1"
-                          className="mx-1 h-8 w-10 rounded-md border text-center"
-                        />
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleQuantityChange(
-                              item.productId._id,
-                              item.quantity + 1
-                            )
-                          }
-                          className="flex h-8 w-8 items-center justify-center"
-                        >
-                          +
-                        </button>
+                      <div className="mb-2 flex">
+                        <div className="min-w-24 flex">
+                          <button
+                            type="button"
+                            className="h-8 w-8"
+                            onClick={() =>
+                              handleQuantityChange(
+                                item.productId._id,
+                                item.quantity - 1
+                              )
+                            }
+                          >
+                            -
+                          </button>
+                          <input
+                            type="number"
+                            value={item.quantity}
+                            onChange={(e) =>
+                              handleQuantityChange(
+                                item.productId._id,
+                                Number(e.target.value)
+                              )
+                            }
+                            min="1"
+                            className="mx-1 h-8 w-10 rounded-md border text-center"
+                          />
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleQuantityChange(
+                                item.productId._id,
+                                item.quantity + 1
+                              )
+                            }
+                            className="flex h-8 w-8 items-center justify-center"
+                          >
+                            +
+                          </button>
+                        </div>
+                        <div className="ml-6 flex text-base">
+                          <button
+                            type="button"
+                            className="flex items-center space-x-1 px-2 py-1 pl-0"
+                            onClick={() => handleRemoveItem(item.productId._id)}
+                          >
+                            <FaTrash size={14} className="text-red-500" />
+                            <span className="text-sm font-medium text-red-500">
+                              Remove
+                            </span>
+                          </button>
+                        </div>
                       </div>
-                      <div className="ml-6 flex text-base">
-                        <button
-                          type="button"
-                          className="flex items-center space-x-1 px-2 py-1 pl-0"
-                          onClick={() => handleRemoveItem(item.productId._id)}
-                        >
-                          <FaTrash size={14} className="text-red-500" />
-                          <span className="text-sm font-medium text-red-500">
-                            Remove
-                          </span>
-                        </button>
+                    </li>
+                  ) : (
+                    <li key={item._id} className="flex py-6 sm:py-6">
+                      <div className="flex-shrink-0">
+                        <p className="text-red-500">Invalid item</p>{" "}
+                        {/* You can customize this message */}
                       </div>
-                    </div>
-                  </li>
-                ))}
+                    </li>
+                  )
+                )}
               </ul>
             ) : (
               <p className="empty-cart-message">Your cart is empty.</p>
