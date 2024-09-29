@@ -63,7 +63,6 @@ const ProductList = () => {
 
   const handleAddToCompare = async (productId) => {
     try {
-      // Ensure the productId is being sent correctly
       const response = await axios.post(
         "http://localhost:5001/api/compare/add",
         {
@@ -79,7 +78,6 @@ const ProductList = () => {
 
       console.log("Add to Compare Response:", response.data);
 
-      // Check if the response is successful and contains the necessary data
       if (response.status === 200 && response.data) {
         alert("Item added successfully to compare!");
         navigate("/compare"); // Redirect to Compare page after adding to compare
@@ -93,42 +91,60 @@ const ProductList = () => {
   };
 
   return (
-    <div className="product-list">
+    <div className="p-6 bg-gray-50 min-h-screen">
       {loading && <p>Loading products...</p>} {/* Loading message */}
-      {error && <p className="error-message">{error}</p>}
-      {products.length > 0 && !loading
-        ? products.map((product) => (
-            <div className="product-card" key={product._id}>
-              <Link to={`/products/${product._id}`} className="product-link">
+      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+      {products.length > 0 && !loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {products.map((product) => (
+            <div
+              className="border border-gray-300 rounded-lg shadow-lg p-4 flex flex-col items-center bg-white transition-transform transform hover:scale-105"
+              key={product._id}
+            >
+              <Link
+                to={`/products/${product._id}`}
+                className="flex flex-col items-center"
+              >
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="product-image"
+                  className="w-full h-48 object-cover mb-4 rounded-lg transition-transform duration-200 transform hover:scale-105"
                 />
-                <h2 className="product-name">{product.name}</h2>
-                <div className="price">
-                  {product.offerprice}
-                  <span className="original-price">
+                <h2 className="text-lg font-semibold mb-2 text-gray-800 text-center">
+                  {product.name}
+                </h2>
+                <div className="text-center mb-2">
+                  <span className="text-xl font-bold text-cyan-600">
+                    {product.offerprice}
+                  </span>
+                  <span className="line-through text-gray-500 ml-2">
                     {product.originalprice}
                   </span>
-                  <span className="discount">{product.discount} off</span>
+                  <span className="text-red-500 ml-2">
+                    {product.discount} off
+                  </span>
                 </div>
               </Link>
-              <button
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-2 rounded ml-[5px]"
-                onClick={() => handleAddToCart(product._id)}
-              >
-                Add to Cart
-              </button>
-              <button
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded ml-[5px]"
-                onClick={() => handleAddToCompare(product._id)}
-              >
-                Compare
-              </button>
+              <div className="flex space-x-4">
+                <button
+                  className="mt-auto bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 transition duration-300 shadow-sm"
+                  onClick={() => handleAddToCart(product._id)}
+                >
+                  Add to Cart
+                </button>
+                <button
+                  className="mt-auto bg-green-500 text-white py-2 px-6 rounded-lg hover:bg-green-600 transition duration-300 shadow-sm"
+                  onClick={() => handleAddToCompare(product._id)}
+                >
+                  Compare
+                </button>
+              </div>
             </div>
-          ))
-        : !loading && <p>No products available.</p>}
+          ))}
+        </div>
+      ) : (
+        !loading && <p>No products available.</p>
+      )}
     </div>
   );
 };
