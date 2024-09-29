@@ -15,13 +15,15 @@ const TVDetail = ({
   speaker_power,
   voltage,
   hdmi_ports,
-  image,
   images,
   rating,
   discount,
   about,
+  ratedby, // Add ratedby prop
 }) => {
-  const [selectedImage, setSelectedImage] = useState(image);
+  const [selectedImage, setSelectedImage] = useState(
+    images.length > 0 ? images[0] : null
+  ); // Handle if no images available
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -68,45 +70,49 @@ const TVDetail = ({
     <div className="flex justify-between items-start mt-8 space-x-8">
       {/* Left side - Image Thumbnails Column */}
       <div className="flex flex-col space-y-1 w-1/12">
-        {images.map((img, index) => (
-          <img
-            key={index}
-            src={img}
-            alt={`Product thumbnail ${index + 1}`}
-            onClick={() => setSelectedImage(img)}
-            className={`cursor-pointer rounded-lg w-3/2 h-auto border-2 ${
-              selectedImage === img ? "border-blue-500" : "border-gray-200"
-            }`}
-          />
-        ))}
+        {images && images.length > 0 ? (
+          images.map((img, index) => (
+            <img
+              key={index}
+              src={img}
+              alt={`Product thumbnail ${index + 1}`}
+              onClick={() => setSelectedImage(img)}
+              className={`cursor-pointer rounded-lg w-3/2 h-auto border-2 ${
+                selectedImage === img ? "border-blue-500" : "border-gray-200"
+              }`}
+            />
+          ))
+        ) : (
+          <p>No images available</p> // Handle if no images
+        )}
       </div>
 
       {/* Right side - Large Image and Product Info */}
       <div className="w-5/6 flex flex-row items-start">
         {/* Large Image */}
         <div className="mb-4 w-full">
-          <img
-            src={selectedImage}
-            alt="Selected product"
-            className="w-full h-auto"
-          />
+          {selectedImage ? (
+            <img
+              src={selectedImage}
+              alt="Selected product"
+              className="w-full h-auto"
+            />
+          ) : (
+            <p>No image to display</p> // Fallback if no image is selected
+          )}
         </div>
 
         {/* Product Info */}
         <div className="pl-4 w-full">
           <h1 className="text-3xl font-bold mb-4">{name}</h1>
-          <p className="text-lg mb-4">{about}</p>
 
-          {/* Price Details */}
           <div className="flex items-center mb-4">
             <span className="text-gray-500 line-through mr-2">
               {originalprice}
             </span>
-            <span className="text-blue-500-md font-bold">{offerprice}</span>
+            <span className="text-blue-500 font-bold">{offerprice}</span>
             <span className="text-sm text-gray-500 ml-2">{discount} off</span>
           </div>
-
-          {/* Buttons */}
           <div className="mb-4">
             <button
               onClick={handleAddToCart}
@@ -122,14 +128,16 @@ const TVDetail = ({
               Buy Now
             </button>
           </div>
+          {/* Rating */}
+          <p className="text-lg mb-4">
+            <strong>Rating:</strong> {rating} ⭐ (Rated by {ratedby} users){" "}
+            {/* Use ratedby */}
+          </p>
 
-          {/* Product Specs */}
+          {/* TV Specifications */}
           <div className="mb-4">
             <p>
               <strong>Brand:</strong> {brand}
-            </p>
-            <p>
-              <strong>Rating:</strong> {rating} ({ratedby} ratings)
             </p>
             <p>
               <strong>Size:</strong> {size}
@@ -151,6 +159,9 @@ const TVDetail = ({
             </p>
           </div>
 
+          {/* About Section */}
+          <p className="text-lg mb-4">{about}</p>
+
           {error && <p className="text-red-500">{error}</p>}
         </div>
       </div>
@@ -170,11 +181,11 @@ TVDetail.propTypes = {
   speaker_power: PropTypes.string.isRequired,
   voltage: PropTypes.string.isRequired,
   hdmi_ports: PropTypes.number.isRequired,
-  image: PropTypes.string.isRequired,
   images: PropTypes.array.isRequired,
   rating: PropTypes.number.isRequired,
   discount: PropTypes.string.isRequired,
   about: PropTypes.string.isRequired,
+  ratedby: PropTypes.string.isRequired, // Added ratedby prop validation
 };
 
 export default TVDetail;
