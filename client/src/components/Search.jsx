@@ -12,22 +12,27 @@ const filters = [
     id: "brand",
     name: "Brand",
     options: [
+      { value: "iqoo", label: "IQOO" },
       { value: "samsung", label: "Samsung" },
+      { value: "vivo", label: "Vivo" },
       { value: "realme", label: "Realme" },
       { value: "readmi", label: "Readmi" },
       { value: "oneplus", label: "OnePlus" },
-      { value: "iphone", label: "iPhone" },
+      { value: "techno", label: "Techno" },
+      { value: "poco", label: "Poco" },
+      { value: "apple", label: "Apple" },
       { value: "motorola", label: "Motorola" },
+      { value: "lava", label: "Lava" },
     ],
   },
   {
     id: "price",
     name: "Price",
     options: [
-      { value: "low", label: "Under $500" },
-      { value: "mid", label: "$500 - $1000" },
-      { value: "high", label: "$1000 - $2000" },
-      { value: "premium", label: "$2000 & Above" },
+      { value: "low", label: "Under ₹15,000" },
+      { value: "mid", label: "₹15,000 - ₹30,000" },
+      { value: "high", label: "₹30,000 - ₹60,000" },
+      { value: "premium", label: "₹60,000 & Above" },
     ],
   },
   {
@@ -38,25 +43,15 @@ const filters = [
       { value: "android11", label: "Android 11.0" },
       { value: "android12", label: "Android 12.0" },
       { value: "android13", label: "Android 13.0" },
-      { value: "ios8", label: "iOS 8" },
-      { value: "ios9", label: "iOS 9" },
+      { value: "android14", label: "Android 14.0" },
+      { value: "ios14", label: "iOS 14" },
+      { value: "ios9", label: "iOS" },
     ],
   },
+
   {
-    id: "primary_camera",
-    name: "Primary Camera",
-    options: [
-      { value: "4mp", label: "4-7.9 MP" },
-      { value: "8mp", label: "8-11.9 MP" },
-      { value: "12mp", label: "12-15.9 MP" },
-      { value: "16mp", label: "16 - 19.9 MP" },
-      { value: "20mp", label: "20 - 23.9 MP" },
-      { value: "32mp", label: "32 & Above" },
-    ],
-  },
-  {
-    id: "ram_size",
-    name: "RAM Size",
+    id: "ram",
+    name: "RAM",
     options: [
       { value: "1gb", label: "Up to 1.9 GB" },
       { value: "2gb", label: "2 to 3.9 GB" },
@@ -67,8 +62,8 @@ const filters = [
     ],
   },
   {
-    id: "rom_size",
-    name: "ROM Size",
+    id: "rom",
+    name: "ROM",
     options: [
       { value: "4gb", label: "Up to 4 GB" },
       { value: "8gb", label: "8 GB" },
@@ -91,8 +86,8 @@ const filters = [
     ],
   },
   {
-    id: "display_type",
-    name: "Display Type",
+    id: "display",
+    name: "Display",
     options: [
       { value: "amoled", label: "AMOLED" },
       { value: "lcd", label: "LCD" },

@@ -12,22 +12,23 @@ const filters = [
     id: "brand",
     name: "Brand",
     options: [
-      { value: "samsung", label: "Samsung" },
+      { value: "llyod", label: "Llyod" },
+      { value: "cruise", label: "Cruise" },
       { value: "lg", label: "LG" },
+      { value: "panasonic", label: "Panasonic" },
       { value: "daikin", label: "Daikin" },
-      { value: "whirlpool", label: "Whirlpool" },
-      { value: "hitachi", label: "Hitachi" },
+      { value: "carrier", label: "Carrier" },
       // Add more brands as needed
     ],
   },
   {
-    id: "price",
+    id: "offerprice",
     name: "Price Range",
     options: [
-      { value: "low", label: "Under $300" },
-      { value: "mid", label: "$300 - $700" },
-      { value: "high", label: "$700 - $1200" },
-      { value: "premium", label: "$1200 & Above" },
+      { value: "low", label: "Under ₹35,000" },
+      { value: "mid", label: "₹35,000 - ₹50,000" },
+      { value: "high", label: "₹50,000 - ₹65,000" },
+      { value: "premium", label: "₹65,000 & Above" },
     ],
   },
   {
@@ -41,12 +42,12 @@ const filters = [
     ],
   },
   {
-    id: "energy_star",
+    id: "energy_rating",
     name: "Energy Star Rating",
     options: [
-      { value: "3stars", label: "3 Stars" },
-      { value: "4stars", label: "4 Stars" },
-      { value: "5stars", label: "5 Stars" },
+      { value: "3star", label: "3 Star" },
+      { value: "4star", label: "4 Star" },
+      { value: "5star", label: "5 Star" },
     ],
   },
   {
@@ -59,7 +60,7 @@ const filters = [
   },
 ];
 
-const Search = () => {
+const AcSearch = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -215,4 +216,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default AcSearch;

@@ -12,26 +12,24 @@ const filters = [
     id: "brand",
     name: "Brand",
     options: [
-      { value: "samsung", label: "Samsung" },
       { value: "lg", label: "LG" },
+      { value: "samsung", label: "Samsung" },
+      { value: "godrej", label: "Godrej" },
       { value: "whirlpool", label: "Whirlpool" },
-      { value: "bosch", label: "Bosch" },
-      { value: "panasonic", label: "Panasonic" },
       // Add more brands as needed
     ],
   },
   {
-    id: "price",
+    id: "offerprice",
     name: "Price Range",
     options: [
-      { value: "low", label: "Under $300" },
-      { value: "mid", label: "$300 - $700" },
-      { value: "high", label: "$700 - $1000" },
-      { value: "premium", label: "$1000 & Above" },
+      { value: "low", label: "Under ₹15,000" },
+      { value: "mid", label: "₹15,000 - ₹25,000" },
+      { value: "high", label: "₹25,000 - ₹30,000" },
     ],
   },
   {
-    id: "type",
+    id: "accessLocation",
     name: "Washing Machine Type",
     options: [
       { value: "front_load", label: "Front Load" },
@@ -50,7 +48,7 @@ const filters = [
     ],
   },
   {
-    id: "max_speed",
+    id: "maximumRotationalSpeed",
     name: "Maximum Rotational Speed",
     options: [
       { value: "800rpm", label: "Up to 800 RPM" },
@@ -58,18 +56,9 @@ const filters = [
       { value: "1200rpm", label: "Above 1000 RPM" },
     ],
   },
-  {
-    id: "depth",
-    name: "Machine Depth",
-    options: [
-      { value: "45cm", label: "Less than 45 cm" },
-      { value: "60cm", label: "45 - 60 cm" },
-      { value: "above_60cm", label: "Above 60 cm" },
-    ],
-  },
 ];
 
-const Search = () => {
+const WmSearch = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

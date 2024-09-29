@@ -12,25 +12,28 @@ const filters = [
     id: "brand",
     name: "Brand",
     options: [
-      { value: "samsung", label: "Samsung" },
-      { value: "lg", label: "LG" },
       { value: "sony", label: "Sony" },
+      { value: "ibell", label: "IBELL" },
+      { value: "vu", label: "VU" },
+      { value: "westinghouse", label: "Westinghouse" },
+      { value: "toshiba", label: "Toshiba" },
+      { value: "nu", label: "Nu" },
       { value: "panasonic", label: "Panasonic" },
-      { value: "tcl", label: "TCL" },
+      { value: "samsung", label: "Samsung" },
     ],
   },
   {
-    id: "price",
+    id: "offerprice",
     name: "Price Range",
     options: [
-      { value: "low", label: "Under $300" },
-      { value: "mid", label: "$300 - $800" },
-      { value: "high", label: "$800 - $1500" },
-      { value: "premium", label: "$1500 & Above" },
+      { value: "low", label: "Under ₹30,000" },
+      { value: "mid", label: "₹30,000 - ₹40,000" },
+      { value: "high", label: "₹40,000 - ₹60,000" },
+      { value: "premium", label: "₹60,000 & Above" },
     ],
   },
   {
-    id: "display_size",
+    id: "size",
     name: "Display Size",
     options: [
       { value: "32", label: "32 inches" },
@@ -41,18 +44,18 @@ const filters = [
       { value: "75", label: "75 inches" },
     ],
   },
+  // {
+  //   id: "resolution",
+  //   name: "Resolution",
+  //   options: [
+  //     { value: "hd", label: "HD" },
+  //     { value: "fullhd", label: "Full HD" },
+  //     { value: "4k", label: "4K" },
+  //     { value: "8k", label: "8K" },
+  //   ],
+  // },
   {
-    id: "resolution",
-    name: "Resolution",
-    options: [
-      { value: "hd", label: "HD" },
-      { value: "fullhd", label: "Full HD" },
-      { value: "4k", label: "4K" },
-      { value: "8k", label: "8K" },
-    ],
-  },
-  {
-    id: "display_technology",
+    id: "display_type",
     name: "Display Technology",
     options: [
       { value: "led", label: "LED" },
@@ -61,35 +64,29 @@ const filters = [
       { value: "lcd", label: "LCD" },
     ],
   },
+
   {
-    id: "speaker_power",
-    name: "Speaker Maximum Output Power",
+    id: "power_consumption",
+    name: "Power Consumption",
     options: [
-      { value: "10w", label: "Up to 10W" },
-      { value: "20w", label: "10W - 20W" },
-      { value: "30w", label: "20W - 30W" },
-      { value: "40w", label: "30W & Above" },
+      { value: "80 watts", label: "80 watts" },
+      { value: "95 watts", label: "95 watts" },
+      { value: "100 watts", label: "100 watts" },
+      { value: "150 watts", label: "150 watts" },
+      { value: "220 watts", label: "220 watts" },
+      { value: "dual", label: "Dual Voltage (110-220 watts)" },
     ],
   },
-  {
-    id: "voltage",
-    name: "Voltage",
-    options: [
-      { value: "110v", label: "110V" },
-      { value: "220v", label: "220V" },
-      { value: "dual", label: "Dual Voltage (110-220V)" },
-    ],
-  },
-  {
-    id: "hdmi_ports",
-    name: "Total HDMI Ports",
-    options: [
-      { value: "1", label: "1 HDMI Port" },
-      { value: "2", label: "2 HDMI Ports" },
-      { value: "3", label: "3 HDMI Ports" },
-      { value: "4+", label: "4 or more HDMI Ports" },
-    ],
-  },
+  // {
+  //   id: "hdmi_ports",
+  //   name: "Total HDMI Ports",
+  //   options: [
+  //     { value: "1", label: "1 HDMI Port" },
+  //     { value: "2", label: "2 HDMI Ports" },
+  //     { value: "3", label: "3 HDMI Ports" },
+  //     { value: "4+", label: "4 or more HDMI Ports" },
+  //   ],
+  // },
 ];
 
 const TvSearch = () => {
