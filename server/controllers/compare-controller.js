@@ -1,0 +1,120 @@
+const Product = require("../models/Product");
+const Comparison = require("../models/compare");
+
+// Add a product to Compare List
+exports.addToCompare = async (req, res) => {
+  const { productId } = req.body;
+  const userId = req.user._id; // Ensure req.user is populated by auth middleware
+
+  try {
+    if (!productId) {
+      return res.status(400).json({ message: "Product ID is required" });
+    }
+
+    // Check if the product exists
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Find or create the comparison list
+    let compareList = await Comparison.findOne({ userId });
+    if (!compareList) {
+      compareList = new Comparison({ userId, productIds: [productId] });
+    } else {
+      if (compareList.productIds.some((id) => id.equals(productId))) {
+        return res
+          .status(400)
+          .json({ message: "Product already in comparison list" });
+      }
+      compareList.productIds.push(productId);
+    }
+
+    await compareList.save();
+    res
+      .status(200)
+      .json({ message: "Product added to comparison list", compareList });
+  } catch (error) {
+    console.error("Error adding to comparison:", error);
+    res
+      .status(500)
+      .json({ message: "Error adding to comparison", error: error.message });
+  }
+};
+
+// Get the Compare List for a user
+exports.getCompareList = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    // Access control: Ensure the authenticated user can only access their own comparison list
+    if (req.user._id.toString() !== userId) {
+      return res
+        .status(403)
+        .json({ message: "Access denied, Unauthorized access" });
+    }
+
+    // Fetch comparison list for the user
+    const compareList = await Comparison.findOne({ userId }).populate(
+      "productIds"
+    );
+
+    if (!compareList) {
+      return res.status(404).json({ message: "Comparison list not found." });
+    }
+
+    return res.status(200).json(compareList.productIds); // Return only the populated product details
+  } catch (error) {
+    console.error("Error fetching comparison list:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// Remove a product from Compare List
+exports.removeFromCompare = async (req, res) => {
+  const { productId } = req.body;
+  const userId = req.user._id;
+
+  try {
+    let compareList = await Comparison.findOne({ userId });
+    if (!compareList) {
+      return res.status(404).json({ message: "Comparison list not found." });
+    }
+
+    // Remove the product from the list
+    compareList.productIds = compareList.productIds.filter(
+      (id) => !id.equals(productId)
+    );
+
+    await compareList.save();
+    res
+      .status(200)
+      .json({ message: "Product removed from comparison list", compareList });
+  } catch (error) {
+    console.error("Error removing product from comparison:", error);
+    res
+      .status(500)
+      .json({
+        message: "Error removing product from comparison",
+        error: error.message,
+      });
+  }
+};
+
+// Add a product from Compare List to Cart
+exports.addToCartFromCompare = async (req, res) => {
+  const { productId } = req.body;
+  const userId = req.user._id;
+
+  try {
+    // Assume there's a Cart model and related logic to add to cart
+    // Your cart logic goes here...
+
+    res.status(200).json({ message: "Product added to cart successfully" });
+  } catch (error) {
+    console.error("Error adding product to cart from comparison:", error);
+    res
+      .status(500)
+      .json({ message: "Error adding product to cart", error: error.message });
+  }
+};

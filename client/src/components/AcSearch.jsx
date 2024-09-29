@@ -13,90 +13,48 @@ const filters = [
     name: "Brand",
     options: [
       { value: "samsung", label: "Samsung" },
-      { value: "realme", label: "Realme" },
-      { value: "readmi", label: "Readmi" },
-      { value: "oneplus", label: "OnePlus" },
-      { value: "iphone", label: "iPhone" },
-      { value: "motorola", label: "Motorola" },
+      { value: "lg", label: "LG" },
+      { value: "daikin", label: "Daikin" },
+      { value: "whirlpool", label: "Whirlpool" },
+      { value: "hitachi", label: "Hitachi" },
+      // Add more brands as needed
     ],
   },
   {
     id: "price",
-    name: "Price",
+    name: "Price Range",
     options: [
-      { value: "low", label: "Under $500" },
-      { value: "mid", label: "$500 - $1000" },
-      { value: "high", label: "$1000 - $2000" },
-      { value: "premium", label: "$2000 & Above" },
+      { value: "low", label: "Under $300" },
+      { value: "mid", label: "$300 - $700" },
+      { value: "high", label: "$700 - $1200" },
+      { value: "premium", label: "$1200 & Above" },
     ],
   },
   {
-    id: "os",
-    name: "Operating System",
+    id: "capacity",
+    name: "Air Conditioner Capacity",
     options: [
-      { value: "android10", label: "Android 10.0" },
-      { value: "android11", label: "Android 11.0" },
-      { value: "android12", label: "Android 12.0" },
-      { value: "android13", label: "Android 13.0" },
-      { value: "ios8", label: "iOS 8" },
-      { value: "ios9", label: "iOS 9" },
+      { value: "1ton", label: "Up to 1 Ton" },
+      { value: "1.5ton", label: "1 - 1.5 Tons" },
+      { value: "2ton", label: "1.5 - 2 Tons" },
+      { value: "above_2ton", label: "Above 2 Tons" },
     ],
   },
   {
-    id: "primary_camera",
-    name: "Primary Camera",
+    id: "energy_star",
+    name: "Energy Star Rating",
     options: [
-      { value: "4mp", label: "4-7.9 MP" },
-      { value: "8mp", label: "8-11.9 MP" },
-      { value: "12mp", label: "12-15.9 MP" },
-      { value: "16mp", label: "16 - 19.9 MP" },
-      { value: "20mp", label: "20 - 23.9 MP" },
-      { value: "32mp", label: "32 & Above" },
+      { value: "3stars", label: "3 Stars" },
+      { value: "4stars", label: "4 Stars" },
+      { value: "5stars", label: "5 Stars" },
     ],
   },
   {
-    id: "ram_size",
-    name: "RAM Size",
+    id: "type",
+    name: "AC Type",
     options: [
-      { value: "1gb", label: "Up to 1.9 GB" },
-      { value: "2gb", label: "2 to 3.9 GB" },
-      { value: "4gb", label: "4 to 5.9 GB" },
-      { value: "6gb", label: "6 to 7.9 GB" },
-      { value: "8gb", label: "8 to 9.9 GB" },
-      { value: "10gb", label: "10 GB & Above" },
-    ],
-  },
-  {
-    id: "rom_size",
-    name: "ROM Size",
-    options: [
-      { value: "4gb", label: "Up to 4 GB" },
-      { value: "8gb", label: "8 GB" },
-      { value: "16gb", label: "16 GB" },
-      { value: "32gb", label: "32 GB" },
-      { value: "64gb", label: "64 GB" },
-      { value: "128gb", label: "128 GB" },
-      { value: "256gb", label: "256 GB" },
-      { value: "512gb", label: "512 GB & above" },
-    ],
-  },
-  {
-    id: "battery",
-    name: "Battery",
-    options: [
-      { value: "3000mah", label: "Up to 2,999 mAh" },
-      { value: "5000mah", label: "3,000 to 4,999 mAh" },
-      { value: "6000mah", label: "5,000 to 5,999 mAh" },
-      { value: "6000mah+", label: "6,000 mAh & above" },
-    ],
-  },
-  {
-    id: "display_type",
-    name: "Display Type",
-    options: [
-      { value: "amoled", label: "AMOLED" },
-      { value: "lcd", label: "LCD" },
-      { value: "oled", label: "OLED" },
+      { value: "split", label: "Split" },
+      { value: "window", label: "Window" },
     ],
   },
 ];
@@ -253,4 +211,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default AcSearch;

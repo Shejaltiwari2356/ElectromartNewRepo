@@ -9,6 +9,7 @@ const errorMiddleware = require("./middleswares/error-middleware");
 const authRoute = require("./router/auth-router");
 const productRoute = require("./router/product-router");
 const cartRoute = require("./router/cart-router"); // Added cart route
+const compareRoute = require("./router/compare-router");
 const payRoute = require("./router/payment-router");
 
 const corsOption = {
@@ -24,7 +25,8 @@ app.use(express.json());
 // Routes setup
 app.use("/api/auth", authRoute);
 app.use("/api/products", productRoute);
-app.use("/api/cart", cartRoute); // Added cart route
+app.use("/api/cart", cartRoute);
+app.use("/api/compare", compareRoute);
 app.use("/api/wishlist", cartRoute);
 app.use("/api", payRoute);
 

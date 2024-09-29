@@ -10,6 +10,8 @@ import Cart from "./pages/Cart";
 import ThankYouPage from "./pages/ThankYou";
 import Payment from "./pages/Payment";
 import WishList from "./pages/WishList";
+import ServicePage from "./pages/Service";
+import Compare from "./pages/Compare";
 
 function App() {
   return (
@@ -26,7 +28,9 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/thank-you" element={<ThankYouPage />} />
           <Route path="/payment" element={<Payment />} />
-          <Route path="/wishlist" element={<WishList/>} />
+          <Route path="/wishlist" element={<WishList />} />
+          <Route path="/service" element={<ServicePage />} />
+          <Route path="/compare" element={<Compare />} />
         </Routes>
       </BrowserRouter>
     </>
