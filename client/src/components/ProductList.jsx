@@ -24,11 +24,6 @@ const ProductList = () => {
   }, []);
 
   const handleAddToCart = async (productId) => {
-    // if (!token) {
-    //   alert("You must be logged in to add items to the cart.");
-    //   return;
-    // }
-
     try {
       const response = await axios.post(
         "http://localhost:5001/api/cart/add",
@@ -45,9 +40,7 @@ const ProductList = () => {
 
       console.log("Add to Cart Response:", response.data);
 
-      // Check if the response is successful and contains the necessary data
       if (response.status === 200 && response.data) {
-        // Optionally show a success message
         alert("Item added to cart successfully!");
         navigate("/cart"); // Redirect to Cart page after adding to cart
       } else {
@@ -60,28 +53,42 @@ const ProductList = () => {
   };
 
   return (
-    <div className="product-list">
-      {error && <p className="error-message">{error}</p>}
-      {products.map((product) => (
-        <div className="product-card" key={product._id}>
-          <Link to={`/products/${product._id}`} className="product-link">
-            <img
-              src={product.image}
-              alt={product.name}
-              className="product-image"
-            />
-            <h2 className="product-name">{product.name}</h2>
-            <div className="price">
-              {product.offerprice}
-              <span className="original-price">{product.originalprice}</span>
-              <span className="discount">{product.discount} off</span>
-            </div>
-          </Link>
-          <button onClick={() => handleAddToCart(product._id)}>Buy Now</button>
-        </div>
-      ))}
+    <div className="p-6 bg-gray-50 min-h-screen">
+      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {products.map((product) => (
+          <div className="border border-gray-300 rounded-lg shadow-lg p-4 flex flex-col items-center bg-white transition-transform transform hover:scale-105" key={product._id}>
+            <Link to={`/products/${product._id}`} className="flex flex-col items-center">
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full h-48 object-cover mb-4 rounded-lg transition-transform duration-200 transform hover:scale-105"
+              />
+              <h2 className="text-lg font-semibold mb-2 text-gray-800 text-center">{product.name}</h2>
+              <div className="text-center mb-2">
+                <span className="text-xl font-bold text-cyan-600">{product.offerprice}</span>
+                <span className="line-through text-gray-500 ml-2">{product.originalprice}</span>
+                <span className="text-red-500 ml-2">{product.discount} off</span>
+              </div>
+            </Link>
+            <button 
+              onClick={() => handleAddToCart(product._id)}
+              className="mt-auto bg-purple-200 text-gray-800 py-2 px-6 rounded-lg hover:bg-purple-300 transition duration-300 shadow-sm"
+            >
+              Buy Now
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
 export default ProductList;
+
+
+
+
+
+
+

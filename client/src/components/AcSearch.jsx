@@ -8,65 +8,62 @@ const useQuery = () => {
 };
 
 const filters = [
-    {
-      id: "brand",
-      name: "Brand",
-      options: [
-        { value: "samsung", label: "Samsung" },
-        { value: "lg", label: "LG" },
-        { value: "daikin", label: "Daikin" },
-        { value: "whirlpool", label: "Whirlpool" },
-        { value: "hitachi", label: "Hitachi" },
-        // Add more brands as needed
-      ],
-    },
-    {
-      id: "price",
-      name: "Price Range",
-      options: [
-        { value: "low", label: "Under $300" },
-        { value: "mid", label: "$300 - $700" },
-        { value: "high", label: "$700 - $1200" },
-        { value: "premium", label: "$1200 & Above" },
-      ],
-    },
-    {
-      id: "capacity",
-      name: "Air Conditioner Capacity",
-      options: [
-        { value: "1ton", label: "Up to 1 Ton" },
-        { value: "1.5ton", label: "1 - 1.5 Tons" },
-        { value: "2ton", label: "1.5 - 2 Tons" },
-        { value: "above_2ton", label: "Above 2 Tons" },
-      ],
-    },
-    {
-      id: "energy_star",
-      name: "Energy Star Rating",
-      options: [
-        { value: "3stars", label: "3 Stars" },
-        { value: "4stars", label: "4 Stars" },
-        { value: "5stars", label: "5 Stars" },
-      ],
-    },
-    {
-      id: "type",
-      name: "AC Type",
-      options: [
-        { value: "split", label: "Split" },
-        { value: "window", label: "Window" },
-      ],
-    },
-  ];
-
-  
-  
+  {
+    id: "brand",
+    name: "Brand",
+    options: [
+      { value: "samsung", label: "Samsung" },
+      { value: "lg", label: "LG" },
+      { value: "daikin", label: "Daikin" },
+      { value: "whirlpool", label: "Whirlpool" },
+      { value: "hitachi", label: "Hitachi" },
+      // Add more brands as needed
+    ],
+  },
+  {
+    id: "price",
+    name: "Price Range",
+    options: [
+      { value: "low", label: "Under $300" },
+      { value: "mid", label: "$300 - $700" },
+      { value: "high", label: "$700 - $1200" },
+      { value: "premium", label: "$1200 & Above" },
+    ],
+  },
+  {
+    id: "capacity",
+    name: "Air Conditioner Capacity",
+    options: [
+      { value: "1ton", label: "Up to 1 Ton" },
+      { value: "1.5ton", label: "1 - 1.5 Tons" },
+      { value: "2ton", label: "1.5 - 2 Tons" },
+      { value: "above_2ton", label: "Above 2 Tons" },
+    ],
+  },
+  {
+    id: "energy_star",
+    name: "Energy Star Rating",
+    options: [
+      { value: "3stars", label: "3 Stars" },
+      { value: "4stars", label: "4 Stars" },
+      { value: "5stars", label: "5 Stars" },
+    ],
+  },
+  {
+    id: "type",
+    name: "AC Type",
+    options: [
+      { value: "split", label: "Split" },
+      { value: "window", label: "Window" },
+    ],
+  },
+];
 
 const Search = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [activeFilter, setActiveFilter] = useState(null);
+  const [activeFilters, setActiveFilters] = useState([]); // Changed to array
   const query = useQuery().get("q");
 
   useEffect(() => {
@@ -91,7 +88,9 @@ const Search = () => {
 
   // Toggle filter visibility
   const toggleFilter = (id) => {
-    setActiveFilter(activeFilter === id ? null : id);
+    setActiveFilters((prev) =>
+      prev.includes(id) ? prev.filter((filterId) => filterId !== id) : [...prev, id]
+    );
   };
 
   return (
@@ -115,14 +114,14 @@ const Search = () => {
                   className="flex justify-between w-full items-center text-lg font-semibold text-gray-800"
                 >
                   {filter.name}
-                  {activeFilter === filter.id ? (
+                  {activeFilters.includes(filter.id) ? (
                     <ChevronUp className="h-5 w-5 text-gray-500" />
                   ) : (
                     <ChevronDown className="h-5 w-5 text-gray-500" />
                   )}
                 </button>
 
-                <div className={`${activeFilter === filter.id ? "block" : "hidden"} mt-4`}>
+                <div className={`${activeFilters.includes(filter.id) ? "block" : "hidden"} mt-4`}>
                   <ul className="space-y-3">
                     {filter.options.map((option) => (
                       <li key={option.value} className="flex items-center">
@@ -207,5 +206,6 @@ const Search = () => {
   );
 };
 
-export default AcSearch;
+export default Search; 
+
   

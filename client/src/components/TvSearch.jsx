@@ -8,97 +8,95 @@ const useQuery = () => {
 };
 
 const filters = [
-    {
-      id: "brand",
-      name: "Brand",
-      options: [
-        { value: "samsung", label: "Samsung" },
-        { value: "lg", label: "LG" },
-        { value: "sony", label: "Sony" },
-        { value: "panasonic", label: "Panasonic" },
-        { value: "tcl", label: "TCL" },
-        // Add more brands as needed
-      ],
-    },
-    {
-      id: "price",
-      name: "Price Range",
-      options: [
-        { value: "low", label: "Under $300" },
-        { value: "mid", label: "$300 - $800" },
-        { value: "high", label: "$800 - $1500" },
-        { value: "premium", label: "$1500 & Above" },
-      ],
-    },
-    {
-      id: "display_size",
-      name: "Display Size",
-      options: [
-        { value: "32", label: "32 inches" },
-        { value: "40", label: "40 inches" },
-        { value: "50", label: "50 inches" },
-        { value: "55", label: "55 inches" },
-        { value: "65", label: "65 inches" },
-        { value: "75", label: "75 inches" },
-      ],
-    },
-    {
-      id: "resolution",
-      name: "Resolution",
-      options: [
-        { value: "hd", label: "HD" },
-        { value: "fullhd", label: "Full HD" },
-        { value: "4k", label: "4K" },
-        { value: "8k", label: "8K" },
-      ],
-    },
-    {
-      id: "display_technology",
-      name: "Display Technology",
-      options: [
-        { value: "led", label: "LED" },
-        { value: "oled", label: "OLED" },
-        { value: "qled", label: "QLED" },
-        { value: "lcd", label: "LCD" },
-      ],
-    },
-    {
-      id: "speaker_power",
-      name: "Speaker Maximum Output Power",
-      options: [
-        { value: "10w", label: "Up to 10W" },
-        { value: "20w", label: "10W - 20W" },
-        { value: "30w", label: "20W - 30W" },
-        { value: "40w", label: "30W & Above" },
-      ],
-    },
-    {
-      id: "voltage",
-      name: "Voltage",
-      options: [
-        { value: "110v", label: "110V" },
-        { value: "220v", label: "220V" },
-        { value: "dual", label: "Dual Voltage (110-220V)" },
-      ],
-    },
-    {
-      id: "hdmi_ports",
-      name: "Total HDMI Ports",
-      options: [
-        { value: "1", label: "1 HDMI Port" },
-        { value: "2", label: "2 HDMI Ports" },
-        { value: "3", label: "3 HDMI Ports" },
-        { value: "4+", label: "4 or more HDMI Ports" },
-      ],
-    },
-  ];
-  
+  {
+    id: "brand",
+    name: "Brand",
+    options: [
+      { value: "samsung", label: "Samsung" },
+      { value: "lg", label: "LG" },
+      { value: "sony", label: "Sony" },
+      { value: "panasonic", label: "Panasonic" },
+      { value: "tcl", label: "TCL" },
+    ],
+  },
+  {
+    id: "price",
+    name: "Price Range",
+    options: [
+      { value: "low", label: "Under $300" },
+      { value: "mid", label: "$300 - $800" },
+      { value: "high", label: "$800 - $1500" },
+      { value: "premium", label: "$1500 & Above" },
+    ],
+  },
+  {
+    id: "display_size",
+    name: "Display Size",
+    options: [
+      { value: "32", label: "32 inches" },
+      { value: "40", label: "40 inches" },
+      { value: "50", label: "50 inches" },
+      { value: "55", label: "55 inches" },
+      { value: "65", label: "65 inches" },
+      { value: "75", label: "75 inches" },
+    ],
+  },
+  {
+    id: "resolution",
+    name: "Resolution",
+    options: [
+      { value: "hd", label: "HD" },
+      { value: "fullhd", label: "Full HD" },
+      { value: "4k", label: "4K" },
+      { value: "8k", label: "8K" },
+    ],
+  },
+  {
+    id: "display_technology",
+    name: "Display Technology",
+    options: [
+      { value: "led", label: "LED" },
+      { value: "oled", label: "OLED" },
+      { value: "qled", label: "QLED" },
+      { value: "lcd", label: "LCD" },
+    ],
+  },
+  {
+    id: "speaker_power",
+    name: "Speaker Maximum Output Power",
+    options: [
+      { value: "10w", label: "Up to 10W" },
+      { value: "20w", label: "10W - 20W" },
+      { value: "30w", label: "20W - 30W" },
+      { value: "40w", label: "30W & Above" },
+    ],
+  },
+  {
+    id: "voltage",
+    name: "Voltage",
+    options: [
+      { value: "110v", label: "110V" },
+      { value: "220v", label: "220V" },
+      { value: "dual", label: "Dual Voltage (110-220V)" },
+    ],
+  },
+  {
+    id: "hdmi_ports",
+    name: "Total HDMI Ports",
+    options: [
+      { value: "1", label: "1 HDMI Port" },
+      { value: "2", label: "2 HDMI Ports" },
+      { value: "3", label: "3 HDMI Ports" },
+      { value: "4+", label: "4 or more HDMI Ports" },
+    ],
+  },
+];
 
-const Search = () => {
+const TvSearch = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [activeFilter, setActiveFilter] = useState(null);
+  const [activeFilters, setActiveFilters] = useState(new Set());
   const query = useQuery().get("q");
 
   useEffect(() => {
@@ -123,7 +121,15 @@ const Search = () => {
 
   // Toggle filter visibility
   const toggleFilter = (id) => {
-    setActiveFilter(activeFilter === id ? null : id);
+    setActiveFilters((prev) => {
+      const updatedFilters = new Set(prev);
+      if (updatedFilters.has(id)) {
+        updatedFilters.delete(id);
+      } else {
+        updatedFilters.add(id);
+      }
+      return updatedFilters;
+    });
   };
 
   return (
@@ -147,14 +153,14 @@ const Search = () => {
                   className="flex justify-between w-full items-center text-lg font-semibold text-gray-800"
                 >
                   {filter.name}
-                  {activeFilter === filter.id ? (
+                  {activeFilters.has(filter.id) ? (
                     <ChevronUp className="h-5 w-5 text-gray-500" />
                   ) : (
                     <ChevronDown className="h-5 w-5 text-gray-500" />
                   )}
                 </button>
 
-                <div className={`${activeFilter === filter.id ? "block" : "hidden"} mt-4`}>
+                <div className={`${activeFilters.has(filter.id) ? "block" : "hidden"} mt-4`}>
                   <ul className="space-y-3">
                     {filter.options.map((option) => (
                       <li key={option.value} className="flex items-center">
@@ -240,3 +246,4 @@ const Search = () => {
 };
 
 export default TvSearch;
+
