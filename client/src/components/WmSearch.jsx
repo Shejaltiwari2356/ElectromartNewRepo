@@ -16,7 +16,6 @@ const filters = [
       { value: "samsung", label: "Samsung" },
       { value: "godrej", label: "Godrej" },
       { value: "whirlpool", label: "Whirlpool" },
-      // Add more brands as needed
     ],
   },
   {
@@ -62,7 +61,13 @@ const WmSearch = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [activeFilter, setActiveFilter] = useState(null);
+  const [activeFilters, setActiveFilters] = useState({
+    brand: new Set(),
+    offerprice: new Set(),
+    accessLocation: new Set(),
+    capacity: new Set(),
+    maximumRotationalSpeed: new Set(),
+  });
   const query = useQuery().get("q");
 
   useEffect(() => {
@@ -85,9 +90,42 @@ const WmSearch = () => {
     }
   }, [query]);
 
+  // Handle filter change
+  const handleFilterChange = (filterId, value) => {
+    const updatedFilters = new Set(activeFilters[filterId]);
+    if (updatedFilters.has(value)) {
+      updatedFilters.delete(value); // Remove the filter if already active
+    } else {
+      updatedFilters.add(value); // Add the new filter
+    }
+    setActiveFilters((prev) => ({
+      ...prev,
+      [filterId]: updatedFilters,
+    }));
+  };
+
+  // Filter products based on active filters
+  const filteredProducts = products.filter((product) => {
+    return Object.entries(activeFilters).every(([filterId, values]) => {
+      if (values.size === 0) return true; // If no filters, include all products
+      if (filterId === "brand") {
+        return values.has(product.brand);
+      }
+      if (filterId === "offerprice") {
+        if (values.has("low")) return product.offerprice < 15000;
+        if (values.has("mid")) return product.offerprice >= 15000 && product.offerprice < 25000;
+        if (values.has("high")) return product.offerprice >= 25000 && product.offerprice <= 30000;
+      }
+      return values.has(product[filterId]);
+    });
+  });
+
   // Toggle filter visibility
   const toggleFilter = (id) => {
-    setActiveFilter(activeFilter === id ? null : id);
+    setActiveFilters((prev) => ({
+      ...prev,
+      [id]: prev[id].size === 0 ? new Set() : prev[id],
+    }));
   };
 
   return (
@@ -114,7 +152,7 @@ const WmSearch = () => {
                   className="flex justify-between w-full items-center text-lg font-semibold text-gray-800"
                 >
                   {filter.name}
-                  {activeFilter === filter.id ? (
+                  {activeFilters[filter.id].size > 0 ? (
                     <ChevronUp className="h-5 w-5 text-gray-500" />
                   ) : (
                     <ChevronDown className="h-5 w-5 text-gray-500" />
@@ -123,7 +161,7 @@ const WmSearch = () => {
 
                 <div
                   className={`${
-                    activeFilter === filter.id ? "block" : "hidden"
+                    activeFilters[filter.id].size > 0 ? "block" : "hidden"
                   } mt-4`}
                 >
                   <ul className="space-y-3">
@@ -134,6 +172,8 @@ const WmSearch = () => {
                           name={`${filter.id}[]`}
                           value={option.value}
                           type="checkbox"
+                          checked={activeFilters[filter.id].has(option.value)}
+                          onChange={() => handleFilterChange(filter.id, option.value)}
                           className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                         />
                         <label
@@ -163,8 +203,8 @@ const WmSearch = () => {
                     {error}
                   </div>
                 )}
-                {Array.isArray(products) && products.length > 0 ? (
-                  products.map((product) => (
+                {Array.isArray(filteredProducts) && filteredProducts.length > 0 ? (
+                  filteredProducts.map((product) => (
                     <Link
                       to={`/products/${product._id}`}
                       key={product._id}

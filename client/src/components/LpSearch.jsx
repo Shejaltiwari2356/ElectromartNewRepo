@@ -16,7 +16,6 @@ const filters = [
       { value: "lenovo", label: "Lenovo" },
       { value: "dell", label: "Dell" },
       { value: "hp", label: "HP" },
-
       // Add more brands as needed
     ],
   },
@@ -35,7 +34,6 @@ const filters = [
     name: "CPU Type",
     options: [
       { value: "core_m_family", label: "Core M Family" },
-      // { value: "core_i3_family", label: "Core i3 Family" },
       { value: "ryzen_5", label: "Ryzen 5" },
       { value: "ryzen_7", label: "Ryzen 7" },
       { value: "core_i7", label: "Core i7" },
@@ -89,7 +87,15 @@ const LpSearch = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [activeFilters, setActiveFilters] = useState(new Set());
+  const [activeFilters, setActiveFilters] = useState({
+    brand: new Set(),
+    offerprice: new Set(),
+    cpuModel: new Set(),
+    ramMemoryInstalledSize: new Set(),
+    screenSize: new Set(),
+    hardDiskSize: new Set(),
+    operatingSystem: new Set(),
+  });
   const query = useQuery().get("q");
 
   useEffect(() => {
@@ -114,16 +120,50 @@ const LpSearch = () => {
 
   // Toggle filter visibility
   const toggleFilter = (id) => {
-    setActiveFilters((prev) => {
-      const updatedFilters = new Set(prev);
-      if (updatedFilters.has(id)) {
-        updatedFilters.delete(id);
-      } else {
-        updatedFilters.add(id);
-      }
-      return updatedFilters;
-    });
+    setActiveFilters((prev) => ({
+      ...prev,
+      [id]: prev[id].has(id)
+        ? new Set([...prev[id]].filter((v) => v !== id))
+        : new Set([...prev[id], id]),
+    }));
   };
+
+  // Handle filter checkbox change
+  const handleFilterChange = (filterId, value) => {
+    setActiveFilters((prev) => ({
+      ...prev,
+      [filterId]: prev[filterId].has(value)
+        ? new Set([...prev[filterId]].filter((v) => v !== value))
+        : new Set([...prev[filterId], value]),
+    }));
+  };
+
+  // Apply filters to products
+  const filteredProducts = products.filter((product) => {
+    return Object.keys(activeFilters).every((filterId) => {
+      if (activeFilters[filterId].size === 0) return true; // No filters applied for this type
+
+      // Check if the product matches any of the selected filters
+      switch (filterId) {
+        case "brand":
+          return activeFilters[filterId].has(product.brand);
+        case "offerprice":
+          return activeFilters[filterId].has(product.offerpriceRange); // Assuming you have a way to define this in your product
+        case "cpuModel":
+          return activeFilters[filterId].has(product.cpuModel);
+        case "ramMemoryInstalledSize":
+          return activeFilters[filterId].has(product.ram);
+        case "screenSize":
+          return activeFilters[filterId].has(product.screenSize);
+        case "hardDiskSize":
+          return activeFilters[filterId].has(product.hardDiskSize);
+        case "operatingSystem":
+          return activeFilters[filterId].has(product.operatingSystem);
+        default:
+          return true;
+      }
+    });
+  });
 
   return (
     <section className="w-full min-h-screen bg-gray-50 py-10">
@@ -149,7 +189,7 @@ const LpSearch = () => {
                   className="flex justify-between w-full items-center text-lg font-semibold text-gray-800"
                 >
                   {filter.name}
-                  {activeFilters.has(filter.id) ? (
+                  {activeFilters[filter.id].size > 0 ? (
                     <ChevronUp className="h-5 w-5 text-gray-500" />
                   ) : (
                     <ChevronDown className="h-5 w-5 text-gray-500" />
@@ -158,7 +198,7 @@ const LpSearch = () => {
 
                 <div
                   className={`${
-                    activeFilters.has(filter.id) ? "block" : "hidden"
+                    activeFilters[filter.id].size > 0 ? "block" : "hidden"
                   } mt-4`}
                 >
                   <ul className="space-y-3">
@@ -169,6 +209,9 @@ const LpSearch = () => {
                           name={`${filter.id}[]`}
                           value={option.value}
                           type="checkbox"
+                          onChange={() =>
+                            handleFilterChange(filter.id, option.value)
+                          }
                           className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                         />
                         <label
@@ -198,8 +241,9 @@ const LpSearch = () => {
                     {error}
                   </div>
                 )}
-                {Array.isArray(products) && products.length > 0 ? (
-                  products.map((product) => (
+                {Array.isArray(filteredProducts) &&
+                filteredProducts.length > 0 ? (
+                  filteredProducts.map((product) => (
                     <Link
                       to={`/products/${product._id}`}
                       key={product._id}

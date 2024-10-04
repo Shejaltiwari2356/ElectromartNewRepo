@@ -48,7 +48,7 @@ const filters = [
       { value: "ios9", label: "iOS" },
     ],
   },
-
+  // Add more filters as needed
   {
     id: "ram",
     name: "RAM",
@@ -100,7 +100,7 @@ const Search = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [activeFilters, setActiveFilters] = useState([]); // Changed from activeFilter to activeFilters
+  const [activeFilters, setActiveFilters] = useState({}); // Manage active filters
   const query = useQuery().get("q");
 
   useEffect(() => {
@@ -123,26 +123,49 @@ const Search = () => {
     }
   }, [query]);
 
-  // Toggle filter visibility
+  const handleFilterChange = (filterId, optionValue) => {
+    setActiveFilters((prevFilters) => {
+      const currentValues = prevFilters[filterId] || new Set();
+      if (currentValues.has(optionValue)) {
+        currentValues.delete(optionValue); // Remove if already present
+      } else {
+        currentValues.add(optionValue); // Add if not present
+      }
+      return {
+        ...prevFilters,
+        [filterId]: currentValues,
+      };
+    });
+  };
+
+  const filteredProducts = products.filter((product) => {
+    return Object.keys(activeFilters).every((filterId) => {
+      const filterValues = activeFilters[filterId];
+      return filterValues ? filterValues.has(product[filterId]) : true;
+    });
+  });
+
   const toggleFilter = (id) => {
-    setActiveFilters((prev) =>
-      prev.includes(id)
-        ? prev.filter((filterId) => filterId !== id)
-        : [...prev, id]
-    );
+    setActiveFilters((prev) => {
+      if (prev[id]) {
+        const newFilters = { ...prev };
+        delete newFilters[id]; // Remove filter
+        return newFilters;
+      } else {
+        return { ...prev, [id]: new Set() }; // Add new filter
+      }
+    });
   };
 
   return (
     <section className="w-full min-h-screen bg-gray-50 py-10">
       <div className="mx-auto max-w-7xl px-4 lg:px-10">
-        {/* Header */}
         <div className="flex justify-between items-center pb-6">
           <h1 className="text-4xl font-bold text-gray-900 tracking-tight">
             Products
           </h1>
         </div>
 
-        {/* Filters & Products */}
         <div className="lg:grid lg:grid-cols-12 lg:gap-x-8">
           {/* Sidebar (Filters) */}
           <aside className="lg:col-span-3 space-y-4">
@@ -156,7 +179,7 @@ const Search = () => {
                   className="flex justify-between w-full items-center text-lg font-semibold text-gray-800"
                 >
                   {filter.name}
-                  {activeFilters.includes(filter.id) ? ( // Changed from activeFilter to activeFilters
+                  {activeFilters[filter.id] ? (
                     <ChevronUp className="h-5 w-5 text-gray-500" />
                   ) : (
                     <ChevronDown className="h-5 w-5 text-gray-500" />
@@ -165,19 +188,22 @@ const Search = () => {
 
                 <div
                   className={`${
-                    activeFilters.includes(filter.id) ? "block" : "hidden"
+                    activeFilters[filter.id] ? "block" : "hidden"
                   } mt-4`}
                 >
-                  {" "}
-                  {/* Changed from activeFilter to activeFilters */}
                   <ul className="space-y-3">
                     {filter.options.map((option) => (
                       <li key={option.value} className="flex items-center">
                         <input
                           id={`${filter.id}-${option.value}`}
-                          name={`${filter.id}[]`}
                           value={option.value}
                           type="checkbox"
+                          checked={
+                            activeFilters[filter.id]?.has(option.value) || false
+                          }
+                          onChange={() =>
+                            handleFilterChange(filter.id, option.value)
+                          }
                           className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                         />
                         <label
@@ -207,8 +233,9 @@ const Search = () => {
                     {error}
                   </div>
                 )}
-                {Array.isArray(products) && products.length > 0 ? (
-                  products.map((product) => (
+                {Array.isArray(filteredProducts) &&
+                filteredProducts.length > 0 ? (
+                  filteredProducts.map((product) => (
                     <Link
                       to={`/products/${product._id}`}
                       key={product._id}

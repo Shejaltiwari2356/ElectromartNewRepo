@@ -44,16 +44,6 @@ const filters = [
       { value: "75", label: "75 inches" },
     ],
   },
-  // {
-  //   id: "resolution",
-  //   name: "Resolution",
-  //   options: [
-  //     { value: "hd", label: "HD" },
-  //     { value: "fullhd", label: "Full HD" },
-  //     { value: "4k", label: "4K" },
-  //     { value: "8k", label: "8K" },
-  //   ],
-  // },
   {
     id: "display_type",
     name: "Display Technology",
@@ -64,7 +54,6 @@ const filters = [
       { value: "lcd", label: "LCD" },
     ],
   },
-
   {
     id: "power_consumption",
     name: "Power Consumption",
@@ -77,23 +66,19 @@ const filters = [
       { value: "dual", label: "Dual Voltage (110-220 watts)" },
     ],
   },
-  // {
-  //   id: "hdmi_ports",
-  //   name: "Total HDMI Ports",
-  //   options: [
-  //     { value: "1", label: "1 HDMI Port" },
-  //     { value: "2", label: "2 HDMI Ports" },
-  //     { value: "3", label: "3 HDMI Ports" },
-  //     { value: "4+", label: "4 or more HDMI Ports" },
-  //   ],
-  // },
 ];
 
 const TvSearch = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [activeFilters, setActiveFilters] = useState(new Set());
+  const [activeFilters, setActiveFilters] = useState({
+    brand: new Set(),
+    offerprice: new Set(),
+    size: new Set(),
+    display_type: new Set(),
+    power_consumption: new Set(),
+  });
   const query = useQuery().get("q");
 
   useEffect(() => {
@@ -119,15 +104,41 @@ const TvSearch = () => {
   // Toggle filter visibility
   const toggleFilter = (id) => {
     setActiveFilters((prev) => {
-      const updatedFilters = new Set(prev);
-      if (updatedFilters.has(id)) {
-        updatedFilters.delete(id);
+      const updatedFilters = { ...prev };
+      if (updatedFilters[id].size) {
+        delete updatedFilters[id];
       } else {
-        updatedFilters.add(id);
+        updatedFilters[id] = new Set();
       }
       return updatedFilters;
     });
   };
+
+  // Handle filter change
+  const handleFilterChange = (filterId, optionValue) => {
+    setActiveFilters((prev) => {
+      const updatedFilters = { ...prev };
+      if (updatedFilters[filterId].has(optionValue)) {
+        updatedFilters[filterId].delete(optionValue);
+      } else {
+        updatedFilters[filterId].add(optionValue);
+      }
+      return updatedFilters;
+    });
+  };
+
+  // Filter products based on active filters
+  const filteredProducts = products.filter((product) => {
+    for (const filterId in activeFilters) {
+      if (activeFilters[filterId].size > 0) {
+        // Check if product matches any active filter
+        if (!activeFilters[filterId].has(product[filterId])) {
+          return false;
+        }
+      }
+    }
+    return true;
+  });
 
   return (
     <section className="w-full min-h-screen bg-gray-50 py-10">
@@ -153,7 +164,7 @@ const TvSearch = () => {
                   className="flex justify-between w-full items-center text-lg font-semibold text-gray-800"
                 >
                   {filter.name}
-                  {activeFilters.has(filter.id) ? (
+                  {activeFilters[filter.id].size ? (
                     <ChevronUp className="h-5 w-5 text-gray-500" />
                   ) : (
                     <ChevronDown className="h-5 w-5 text-gray-500" />
@@ -162,7 +173,7 @@ const TvSearch = () => {
 
                 <div
                   className={`${
-                    activeFilters.has(filter.id) ? "block" : "hidden"
+                    activeFilters[filter.id].size ? "block" : "hidden"
                   } mt-4`}
                 >
                   <ul className="space-y-3">
@@ -173,6 +184,10 @@ const TvSearch = () => {
                           name={`${filter.id}[]`}
                           value={option.value}
                           type="checkbox"
+                          checked={activeFilters[filter.id].has(option.value)}
+                          onChange={() =>
+                            handleFilterChange(filter.id, option.value)
+                          }
                           className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                         />
                         <label
@@ -202,8 +217,8 @@ const TvSearch = () => {
                     {error}
                   </div>
                 )}
-                {Array.isArray(products) && products.length > 0 ? (
-                  products.map((product) => (
+                {filteredProducts.length > 0 ? (
+                  filteredProducts.map((product) => (
                     <Link
                       to={`/products/${product._id}`}
                       key={product._id}

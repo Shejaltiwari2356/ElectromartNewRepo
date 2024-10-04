@@ -18,7 +18,6 @@ const filters = [
       { value: "panasonic", label: "Panasonic" },
       { value: "daikin", label: "Daikin" },
       { value: "carrier", label: "Carrier" },
-      // Add more brands as needed
     ],
   },
   {
@@ -64,7 +63,7 @@ const AcSearch = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [activeFilters, setActiveFilters] = useState([]); // Changed to array
+  const [activeFilters, setActiveFilters] = useState({});
   const query = useQuery().get("q");
 
   useEffect(() => {
@@ -89,12 +88,57 @@ const AcSearch = () => {
 
   // Toggle filter visibility
   const toggleFilter = (id) => {
-    setActiveFilters((prev) =>
-      prev.includes(id)
-        ? prev.filter((filterId) => filterId !== id)
-        : [...prev, id]
-    );
+    setActiveFilters((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
   };
+
+  // Handle checkbox change
+  const handleCheckboxChange = (filterId, optionValue) => {
+    setActiveFilters((prev) => ({
+      ...prev,
+      [filterId]: {
+        ...prev[filterId],
+        [optionValue]: !prev[filterId]?.[optionValue],
+      },
+    }));
+  };
+
+  // Filter products based on active filters
+  const filteredProducts = products.filter((product) => {
+    return Object.keys(activeFilters).every((filterId) => {
+      const selectedOptions = Object.keys(activeFilters[filterId] || {});
+      if (selectedOptions.length === 0) return true; // No filters applied
+
+      // Example filter check (modify as per your actual product data structure)
+      if (filterId === "brand") {
+        return selectedOptions.includes(product.brand);
+      }
+      if (filterId === "offerprice") {
+        const priceRanges = {
+          low: (price) => price < 35000,
+          mid: (price) => price >= 35000 && price < 50000,
+          high: (price) => price >= 50000 && price < 65000,
+          premium: (price) => price >= 65000,
+        };
+        return selectedOptions.some((range) =>
+          priceRanges[range](product.offerprice)
+        );
+      }
+      if (filterId === "capacity") {
+        return selectedOptions.includes(product.capacity);
+      }
+      if (filterId === "energy_rating") {
+        return selectedOptions.includes(product.energy_rating);
+      }
+      if (filterId === "type") {
+        return selectedOptions.includes(product.type);
+      }
+
+      return true; // Fallback for other filters
+    });
+  });
 
   return (
     <section className="w-full min-h-screen bg-gray-50 py-10">
@@ -120,7 +164,7 @@ const AcSearch = () => {
                   className="flex justify-between w-full items-center text-lg font-semibold text-gray-800"
                 >
                   {filter.name}
-                  {activeFilters.includes(filter.id) ? (
+                  {activeFilters[filter.id] ? (
                     <ChevronUp className="h-5 w-5 text-gray-500" />
                   ) : (
                     <ChevronDown className="h-5 w-5 text-gray-500" />
@@ -129,7 +173,7 @@ const AcSearch = () => {
 
                 <div
                   className={`${
-                    activeFilters.includes(filter.id) ? "block" : "hidden"
+                    activeFilters[filter.id] ? "block" : "hidden"
                   } mt-4`}
                 >
                   <ul className="space-y-3">
@@ -140,6 +184,10 @@ const AcSearch = () => {
                           name={`${filter.id}[]`}
                           value={option.value}
                           type="checkbox"
+                          checked={!!activeFilters[filter.id]?.[option.value]}
+                          onChange={() =>
+                            handleCheckboxChange(filter.id, option.value)
+                          }
                           className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                         />
                         <label
@@ -169,8 +217,9 @@ const AcSearch = () => {
                     {error}
                   </div>
                 )}
-                {Array.isArray(products) && products.length > 0 ? (
-                  products.map((product) => (
+                {Array.isArray(filteredProducts) &&
+                filteredProducts.length > 0 ? (
+                  filteredProducts.map((product) => (
                     <Link
                       to={`/products/${product._id}`}
                       key={product._id}
@@ -197,14 +246,14 @@ const AcSearch = () => {
                           </span>
                         </div>
                         <div className="mt-1 text-sm text-green-500 font-semibold">
-                          {product.discount} off
+                          {product.offer} Off
                         </div>
                       </div>
                     </Link>
                   ))
                 ) : (
                   <div className="col-span-full text-center text-gray-500">
-                    No results found.
+                    No products found.
                   </div>
                 )}
               </div>

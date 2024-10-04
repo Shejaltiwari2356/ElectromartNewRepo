@@ -12,6 +12,10 @@ import Payment from "./pages/Payment";
 import WishList from "./pages/WishList";
 import ServicePage from "./pages/Service";
 import Compare from "./pages/Compare";
+import LpSearch from "./components/LpSearch";
+import AcSearch from "./components/AcSearch";
+import WmSearch from "./components/WmSearch";
+import TvSearch from "./components/TvSearch";
 
 function App() {
   return (
@@ -31,6 +35,11 @@ function App() {
           <Route path="/wishlist" element={<WishList />} />
           <Route path="/service" element={<ServicePage />} />
           <Route path="/compare" element={<Compare />} />
+          <Route path="/lpsearch" element={<LpSearch />} />
+          <Route path="/acsearch" element={<AcSearch />} />
+          <Route path="/wmsearch" element={<WmSearch />} />
+          <Route path="/tvsearch" element={<TvSearch />} />
+          {/* <Route path="/search" element={<Search />} /> */}
         </Routes>
       </BrowserRouter>
     </>
