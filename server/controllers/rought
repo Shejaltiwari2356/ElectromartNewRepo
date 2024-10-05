@@ -59,8 +59,6 @@ exports.getCompareList = async (req, res) => {
       "productIds"
     );
 
-    // const compareList = getCompareListForUser(userId);
-
     if (!compareList) {
       return res.status(404).json({ message: "Comparison list not found." });
     }
@@ -74,7 +72,7 @@ exports.getCompareList = async (req, res) => {
 
 // Remove a product from Compare List
 exports.removeFromCompare = async (req, res) => {
-  const { userId, productId } = req.body; // Using req.params to get userId and productId from the URL
+  const { userId, productId } = req.body;
 
   try {
     console.log(
@@ -83,6 +81,7 @@ exports.removeFromCompare = async (req, res) => {
       "ProductID:",
       productId
     );
+
     if (!userId || !productId) {
       return res
         .status(400)
@@ -91,6 +90,7 @@ exports.removeFromCompare = async (req, res) => {
 
     // Find the comparison list for the given user
     const compareList = await Comparison.findOne({ userId });
+
     if (!compareList) {
       return res.status(404).json({ message: "Comparison list not found" });
     }
@@ -100,11 +100,14 @@ exports.removeFromCompare = async (req, res) => {
       (id) => id.toString() !== productId
     );
 
-    // Save the updated comparison list
     await compareList.save();
+
     res.status(200).json(compareList);
   } catch (error) {
-    console.error("Error removing product from comparison list:", error);
+    console.error(
+      "Error removing product from comparison list:",
+      error.message
+    );
     res.status(500).json({
       message: "Error removing product from comparison list",
       error: error.message,

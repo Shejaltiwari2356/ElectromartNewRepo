@@ -111,15 +111,34 @@ const ProductList = ({ category, limit }) => {
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="product-image"
+                  className="product-image w-full h-48 object-contain mb-4"
+                  loading="lazy"
                 />
                 <h2 className="product-name">{product.name}</h2>
-                <div className="price">
-                  {product.offerprice}
-                  <span className="original-price">
-                    {product.originalprice}
-                  </span>
-                  <span className="discount">{product.discount} off</span>
+                <div className="flex justify-between items-center text-lg text-gray-600">
+                  {/* Left side: Price and discount */}
+                  <div className="flex items-center space-x-2">
+                    {/* Offer Price */}
+                    <span className="text-lg font-bold text-gray-800">
+                      {product.offerprice}
+                    </span>
+
+                    {/* Original Price and Discount */}
+                    <div className="flex flex-col items-start">
+                      <span className="line-through text-sm text-gray-400">
+                        {product.originalprice}
+                      </span>
+                      <span className="text-green-500 text-sm">
+                        {product.discount} off
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Right side: Rating */}
+                  <div className="flex items-center">
+                    <span className="text-green-500 text-sm mr-2">Rating:</span>
+                    <span className="text-black text-sm">{product.rating}</span>
+                  </div>
                 </div>
               </Link>
               <button

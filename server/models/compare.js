@@ -9,7 +9,7 @@ const comparisonSchema = new mongoose.Schema({
   productIds: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Product", // Reference to the Dashboardcard model
+      ref: "Dashboardcard", // Reference to the Dashboardcard model (since you're storing products here)
       required: true,
     },
   ],

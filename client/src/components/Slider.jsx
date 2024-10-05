@@ -5,13 +5,13 @@ import "slick-carousel/slick/slick-theme.css";
 import img1 from "../images/img1.png";
 import img2 from "../images/img2.png";
 import img3 from "../images/img3.png";
-import "./Slider.css"
+import "./Slider.css";
 
 const SimpleSlider = () => {
   const settings = {
     dots: true,
     infinite: true,
-    speed:0,
+    speed: 0,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
@@ -49,5 +49,3 @@ const SimpleSlider = () => {
 };
 
 export default SimpleSlider;
-
-
