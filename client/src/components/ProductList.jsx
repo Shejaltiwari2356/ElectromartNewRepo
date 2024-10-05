@@ -3,10 +3,10 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import "./ProductList.css";
 
-const ProductList = () => {
+const ProductList = ({ category, limit }) => {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -15,16 +15,25 @@ const ProductList = () => {
       try {
         const response = await axios.get("http://localhost:5001/api/products");
         setProducts(response.data);
-        setLoading(false); // Stop loading once data is fetched
+        setLoading(false);
       } catch (error) {
         setError("An error occurred while fetching products.");
         console.error("Fetch Products Error:", error);
-        setLoading(false); // Stop loading if error occurs
+        setLoading(false);
       }
     };
 
     fetchProducts();
   }, []);
+
+  const filteredProducts = category
+    ? products.filter((product) => product.category === category)
+    : products;
+
+  // Limit products based on the provided limit prop
+  const limitedProducts = limit
+    ? filteredProducts.slice(0, limit)
+    : filteredProducts;
 
   const handleAddToCart = async (productId) => {
     if (!token) {
@@ -42,7 +51,7 @@ const ProductList = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include token in the request headers
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -63,26 +72,25 @@ const ProductList = () => {
 
   const handleAddToCompare = async (productId) => {
     try {
-      // Ensure the productId is being sent correctly
       const response = await axios.post(
         "http://localhost:5001/api/compare/add",
-        {
-          productId: productId, // Explicitly pass productId
-        },
+        { productId },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include token in the request headers
-            "Content-Type": "application/json", // Ensure correct content type
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
       console.log("Add to Compare Response:", response.data);
 
-      // Check if the response is successful and contains the necessary data
       if (response.status === 200 && response.data) {
         alert("Item added successfully to compare!");
-        navigate("/compare"); // Redirect to Compare page after adding to compare
+
+        // Wait for a short time to ensure the item is added to the backend before navigation
+        setTimeout(() => {
+          navigate("/compare"); // Navigate after adding the product
+        }, 500); // Delay to ensure the backend update is complete before navigation
       } else {
         alert("Failed to add item to compare.");
       }
@@ -94,10 +102,10 @@ const ProductList = () => {
 
   return (
     <div className="product-list">
-      {loading && <p>Loading products...</p>} {/* Loading message */}
+      {loading && <p>Loading products...</p>}
       {error && <p className="error-message">{error}</p>}
-      {products.length > 0 && !loading
-        ? products.map((product) => (
+      {limitedProducts.length > 0 && !loading
+        ? limitedProducts.map((product) => (
             <div className="product-card" key={product._id}>
               <Link to={`/products/${product._id}`} className="product-link">
                 <img

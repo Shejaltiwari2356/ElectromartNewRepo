@@ -1,13 +1,13 @@
 import React from "react";
 import "./Home.css";
-import ProductList from "../components/ProductList";
 import SimpleSlider from "../components/Slider";
-import Footer from "../components/Footer"
+import Footer from "../components/Footer";
+import Categories from "../components/DashBSection";
 
 export const Home = () => {
   return (
     <div>
-        <SimpleSlider />
+      <SimpleSlider />
       <section className="features">
         <div className="feature-item">Special Gift Cards</div>
         <div className="feature-item">Secure Payment</div>
@@ -24,7 +24,7 @@ export const Home = () => {
             <p>$Price</p>
             <button>Add to Cart</button>
           </div> */}
-          <ProductList />
+          <Categories />
         </div>
       </section>
       <Footer />

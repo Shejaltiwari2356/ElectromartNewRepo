@@ -59,6 +59,8 @@ exports.getCompareList = async (req, res) => {
       "productIds"
     );
 
+    // const compareList = getCompareListForUser(userId);
+
     if (!compareList) {
       return res.status(404).json({ message: "Comparison list not found." });
     }
@@ -72,32 +74,41 @@ exports.getCompareList = async (req, res) => {
 
 // Remove a product from Compare List
 exports.removeFromCompare = async (req, res) => {
-  const { productId } = req.body;
-  const userId = req.user._id;
+  const { userId, productId } = req.body; // Using req.params to get userId and productId from the URL
 
   try {
-    let compareList = await Comparison.findOne({ userId });
-    if (!compareList) {
-      return res.status(404).json({ message: "Comparison list not found." });
+    console.log(
+      "Remove from Compare - UserID:",
+      userId,
+      "ProductID:",
+      productId
+    );
+    if (!userId || !productId) {
+      return res
+        .status(400)
+        .json({ message: "UserID and ProductID are required" });
     }
 
-    // Remove the product from the list
-    compareList.productIds = compareList.productIds.filter(
-      (id) => !id.equals(productId)
+    // Find the comparison list for the given user
+    const compareList = await Comparison.findOne({ userId });
+    if (!compareList) {
+      return res.status(404).json({ message: "Comparison list not found" });
+    }
+
+    // Remove the product from the comparison list
+    compareList.products = compareList.products.filter(
+      (p) => p.productId.toString() !== productId
     );
 
+    // Save the updated comparison list
     await compareList.save();
-    res
-      .status(200)
-      .json({ message: "Product removed from comparison list", compareList });
+    res.status(200).json(compareList);
   } catch (error) {
-    console.error("Error removing product from comparison:", error);
-    res
-      .status(500)
-      .json({
-        message: "Error removing product from comparison",
-        error: error.message,
-      });
+    console.error("Error removing product from comparison list:", error);
+    res.status(500).json({
+      message: "Error removing product from comparison list",
+      error: error.message,
+    });
   }
 };
 
