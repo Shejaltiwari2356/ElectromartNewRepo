@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import "./ProductList.css";
+import "./ProductList.css"; // Remove this if you fully move to Tailwind
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -15,11 +15,10 @@ const ProductList = () => {
       try {
         const response = await axios.get("http://localhost:5001/api/products");
         setProducts(response.data);
-        setLoading(false); // Stop loading once data is fetched
+        setLoading(false);
       } catch (error) {
         setError("An error occurred while fetching products.");
-        console.error("Fetch Products Error:", error);
-        setLoading(false); // Stop loading if error occurs
+        setLoading(false);
       }
     };
 
@@ -36,18 +35,9 @@ const ProductList = () => {
     try {
       const response = await axios.post(
         "http://localhost:5001/api/cart/add",
-        {
-          productId,
-          quantity: 1, // Default quantity
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include token in the request headers
-          },
-        }
+        { productId, quantity: 1 },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      console.log("Add to Cart Response:", response.data);
 
       if (response.status === 200 && response.data) {
         alert("Item added to cart successfully!");
@@ -56,79 +46,90 @@ const ProductList = () => {
         alert("Failed to add item to the cart.");
       }
     } catch (error) {
-      console.error("Error adding to cart:", error);
       alert("An error occurred while adding the item to the cart.");
     }
   };
 
   const handleAddToCompare = async (productId) => {
     try {
-      // Ensure the productId is being sent correctly
       const response = await axios.post(
         "http://localhost:5001/api/compare/add",
-        {
-          productId: productId, // Explicitly pass productId
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include token in the request headers
-            "Content-Type": "application/json", // Ensure correct content type
-          },
-        }
+        { productId },
+        { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } }
       );
 
-      console.log("Add to Compare Response:", response.data);
-
-      // Check if the response is successful and contains the necessary data
       if (response.status === 200 && response.data) {
-        alert("Item added successfully to compare!");
-        navigate("/compare"); // Redirect to Compare page after adding to compare
+        alert("Item added to compare successfully!");
+        navigate("/compare");
       } else {
         alert("Failed to add item to compare.");
       }
     } catch (error) {
-      console.error("Error adding to compare:", error.response?.data || error);
       alert("An error occurred while adding the item to compare.");
     }
   };
 
   return (
-    <div className="product-list">
-      {loading && <p>Loading products...</p>} {/* Loading message */}
-      {error && <p className="error-message">{error}</p>}
-      {products.length > 0 && !loading
-        ? products.map((product) => (
-            <div className="product-card" key={product._id}>
-              <Link to={`/products/${product._id}`} className="product-link">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="product-image"
-                />
-                <h2 className="product-name">{product.name}</h2>
-                <div className="price">
-                  {product.offerprice}
-                  <span className="original-price">
-                    {product.originalprice}
-                  </span>
-                  <span className="discount">{product.discount} off</span>
-                </div>
-              </Link>
+    <div className="flex flex-wrap gap-6 justify-center">
+      {loading && <p>Loading products...</p>}
+      {error && <p className="text-red-500">{error}</p>}
+      {products.length > 0 && !loading ? (
+        products.map((product) => (
+          <div key={product._id} className="bg-white rounded-lg shadow-lg p-6 w-80">
+            <Link to={`/products/${product._id}`} className="block text-center">
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full h-48 object-contain mb-4"
+              />
+              <h2 className="text-base font-medium text-gray-800 mb-2">
+                {product.name}
+              </h2>
+              
+              <div className="flex justify-between items-center text-lg text-gray-600">
+  {/* Left side: Price and discount */}
+  <div className="flex items-center space-x-2">
+  {/* Offer Price */}
+  <span className="text-lg font-bold text-gray-800">{product.offerprice}</span>
+  
+  {/* Original Price and Discount */}
+  <div className="flex flex-col items-start">
+    <span className="line-through text-sm text-gray-400">
+      {product.originalprice}
+    </span>
+    <span className="text-green-500 text-sm">
+      {product.discount} off
+    </span>
+  </div>
+</div>
+
+  {/* Right side: Rating */}
+  <div className="flex items-center">
+    <span className="text-green-500 text-sm mr-2">Rating:</span>
+    <span className="text-black text-sm">{product.rating}</span>
+  </div>
+</div>
+
+            </Link>
+            <div className="flex justify-between items-center mt-4">
               <button
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-2 rounded ml-[5px]"
+                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded flex-1 mr-2"
                 onClick={() => handleAddToCart(product._id)}
               >
-                Add to Cart
+                <i className="bi bi-cart3"></i> Add to Cart
               </button>
               <button
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded ml-[5px]"
+                className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded flex-1"
                 onClick={() => handleAddToCompare(product._id)}
               >
-                Compare
+                <i className="bi bi-bag"></i> Compare
               </button>
             </div>
-          ))
-        : !loading && <p>No products available.</p>}
+          </div>
+        ))
+      ) : (
+        !loading && <p>No products available.</p>
+      )}
     </div>
   );
 };
