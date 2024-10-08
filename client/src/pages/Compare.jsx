@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../store/auth"; // Importing the auth hook
+import MobileTable from "../components/MobileCompare"; // Import the MobileTable component
+import ACTable from "../components/ACCompare"; // Import the ACTable component
+import TvTable from "../components/TvCompare"; // Import the TvTable component
+import WashingMachineTable from "../components/WmCompare"; // Import the WashingMachineTable component
+import LaptopTable from "../components/LaptopCompare"; // Import the LaptopTable component
 
 const Compare = () => {
   const [compareList, setCompareList] = useState([]);
@@ -112,420 +117,62 @@ const Compare = () => {
   if (loading) return <div>Loading comparison list...</div>;
   if (error) return <div>{error}</div>;
 
+  // Filter products by category
+  const mobileProducts = compareList.filter(
+    (product) => product.category === "mobiles"
+  );
+  const acProducts = compareList.filter(
+    (product) => product.category === "acs"
+  );
+  const tvProducts = compareList.filter(
+    (product) => product.category === "tvs"
+  );
+  const washingMachineProducts = compareList.filter(
+    (product) => product.category === "washingmachines"
+  );
+  const laptopProducts = compareList.filter(
+    (product) => product.category === "laptops"
+  );
+
   return (
     <div>
       <h1>Comparison List</h1>
-      {compareList.length === 0 ? (
-        <p>No products in your comparison list.</p>
-      ) : (
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            marginTop: "20px",
-          }}
-        >
-          <thead style={{ backgroundColor: "#f2f2f2" }}>
-            <tr>
-              <th
-                style={{
-                  padding: "10px",
-                  border: "1px solid #ddd",
-                  textAlign: "left",
-                }}
-              >
-                Specification
-              </th>
-              {compareList.map((product) => (
-                <th
-                  key={product._id}
-                  style={{
-                    padding: "10px",
-                    border: "1px solid #ddd",
-                    textAlign: "center",
-                  }}
-                >
-                  {product.name}
-                  <button
-                    onClick={() => handleRemoveProduct(product._id)}
-                    style={{
-                      marginLeft: "10px",
-                      backgroundColor: "#ff4d4d",
-                      color: "white",
-                      border: "none",
-                      cursor: "pointer",
-                      padding: "5px 10px",
-                      borderRadius: "5px",
-                    }}
-                  >
-                    Remove
-                  </button>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {/* Name */}
-            <tr>
-              <td
-                style={{
-                  padding: "10px",
-                  border: "1px solid #ddd",
-                  textAlign: "left",
-                }}
-              >
-                Name
-              </td>
-              {compareList.map((product) => (
-                <td
-                  key={product._id}
-                  style={{
-                    padding: "10px",
-                    border: "1px solid #ddd",
-                    textAlign: "center",
-                  }}
-                >
-                  {product.name}
-                </td>
-              ))}
-            </tr>
-            {/* Rating */}
-            <tr>
-              <td
-                style={{
-                  padding: "10px",
-                  border: "1px solid #ddd",
-                  textAlign: "left",
-                }}
-              >
-                Rating
-              </td>
-              {compareList.map((product) => (
-                <td
-                  key={product._id}
-                  style={{
-                    padding: "10px",
-                    border: "1px solid #ddd",
-                    textAlign: "center",
-                  }}
-                >
-                  {product.rating}
-                </td>
-              ))}
-            </tr>
-            {/* Bought */}
-            <tr>
-              <td
-                style={{
-                  padding: "10px",
-                  border: "1px solid #ddd",
-                  textAlign: "left",
-                }}
-              >
-                Bought
-              </td>
-              {compareList.map((product) => (
-                <td
-                  key={product._id}
-                  style={{
-                    padding: "10px",
-                    border: "1px solid #ddd",
-                    textAlign: "center",
-                  }}
-                >
-                  {product.bought}
-                </td>
-              ))}
-            </tr>
-            {/* Offer Price */}
-            <tr>
-              <td
-                style={{
-                  padding: "10px",
-                  border: "1px solid #ddd",
-                  textAlign: "left",
-                }}
-              >
-                Offer Price
-              </td>
-              {compareList.map((product) => (
-                <td
-                  key={product._id}
-                  style={{
-                    padding: "10px",
-                    border: "1px solid #ddd",
-                    textAlign: "center",
-                  }}
-                >
-                  {product.offerprice}
-                </td>
-              ))}
-            </tr>
-            {/* Original Price */}
-            <tr>
-              <td
-                style={{
-                  padding: "10px",
-                  border: "1px solid #ddd",
-                  textAlign: "left",
-                }}
-              >
-                Original Price
-              </td>
-              {compareList.map((product) => (
-                <td
-                  key={product._id}
-                  style={{
-                    padding: "10px",
-                    border: "1px solid #ddd",
-                    textAlign: "center",
-                  }}
-                >
-                  {product.originalprice}
-                </td>
-              ))}
-            </tr>
-            {/* Brand */}
-            <tr>
-              <td
-                style={{
-                  padding: "10px",
-                  border: "1px solid #ddd",
-                  textAlign: "left",
-                }}
-              >
-                Brand
-              </td>
-              {compareList.map((product) => (
-                <td
-                  key={product._id}
-                  style={{
-                    padding: "10px",
-                    border: "1px solid #ddd",
-                    textAlign: "center",
-                  }}
-                >
-                  {product.brand}
-                </td>
-              ))}
-            </tr>
-            {/* Cellular Technology */}
-            <tr>
-              <td
-                style={{
-                  padding: "10px",
-                  border: "1px solid #ddd",
-                  textAlign: "left",
-                }}
-              >
-                Cellular Technology
-              </td>
-              {compareList.map((product) => (
-                <td
-                  key={product._id}
-                  style={{
-                    padding: "10px",
-                    border: "1px solid #ddd",
-                    textAlign: "center",
-                  }}
-                >
-                  {product.cellulartechnology}
-                </td>
-              ))}
-            </tr>
-            {/* OS */}
-            <tr>
-              <td
-                style={{
-                  padding: "10px",
-                  border: "1px solid #ddd",
-                  textAlign: "left",
-                }}
-              >
-                Operating System
-              </td>
-              {compareList.map((product) => (
-                <td
-                  key={product._id}
-                  style={{
-                    padding: "10px",
-                    border: "1px solid #ddd",
-                    textAlign: "center",
-                  }}
-                >
-                  {product.os}
-                </td>
-              ))}
-            </tr>
-            {/* Display */}
-            <tr>
-              <td
-                style={{
-                  padding: "10px",
-                  border: "1px solid #ddd",
-                  textAlign: "left",
-                }}
-              >
-                Display
-              </td>
-              {compareList.map((product) => (
-                <td
-                  key={product._id}
-                  style={{
-                    padding: "10px",
-                    border: "1px solid #ddd",
-                    textAlign: "center",
-                  }}
-                >
-                  {product.display}
-                </td>
-              ))}
-            </tr>
-            {/* RAM */}
-            <tr>
-              <td
-                style={{
-                  padding: "10px",
-                  border: "1px solid #ddd",
-                  textAlign: "left",
-                }}
-              >
-                RAM
-              </td>
-              {compareList.map((product) => (
-                <td
-                  key={product._id}
-                  style={{
-                    padding: "10px",
-                    border: "1px solid #ddd",
-                    textAlign: "center",
-                  }}
-                >
-                  {product.ram}
-                </td>
-              ))}
-            </tr>
-            {/* ROM */}
-            <tr>
-              <td
-                style={{
-                  padding: "10px",
-                  border: "1px solid #ddd",
-                  textAlign: "left",
-                }}
-              >
-                ROM
-              </td>
-              {compareList.map((product) => (
-                <td
-                  key={product._id}
-                  style={{
-                    padding: "10px",
-                    border: "1px solid #ddd",
-                    textAlign: "center",
-                  }}
-                >
-                  {product.rom}
-                </td>
-              ))}
-            </tr>
-            {/* Processor Speed */}
-            <tr>
-              <td
-                style={{
-                  padding: "10px",
-                  border: "1px solid #ddd",
-                  textAlign: "left",
-                }}
-              >
-                Processor Speed
-              </td>
-              {compareList.map((product) => (
-                <td
-                  key={product._id}
-                  style={{
-                    padding: "10px",
-                    border: "1px solid #ddd",
-                    textAlign: "center",
-                  }}
-                >
-                  {product.processorspeed}
-                </td>
-              ))}
-            </tr>
-            {/* Battery */}
-            <tr>
-              <td
-                style={{
-                  padding: "10px",
-                  border: "1px solid #ddd",
-                  textAlign: "left",
-                }}
-              >
-                Battery
-              </td>
-              {compareList.map((product) => (
-                <td
-                  key={product._id}
-                  style={{
-                    padding: "10px",
-                    border: "1px solid #ddd",
-                    textAlign: "center",
-                  }}
-                >
-                  {product.battery} mAh
-                </td>
-              ))}
-            </tr>
-            {/* Discount */}
-            <tr>
-              <td
-                style={{
-                  padding: "10px",
-                  border: "1px solid #ddd",
-                  textAlign: "left",
-                }}
-              >
-                Discount
-              </td>
-              {compareList.map((product) => (
-                <td
-                  key={product._id}
-                  style={{
-                    padding: "10px",
-                    border: "1px solid #ddd",
-                    textAlign: "center",
-                  }}
-                >
-                  {product.discount}
-                </td>
-              ))}
-            </tr>
-          </tbody>
-        </table>
+      {mobileProducts.length > 0 && (
+        <MobileTable
+          compareList={mobileProducts}
+          handleAddToCart={handleAddToCart}
+          handleRemoveProduct={handleRemoveProduct}
+        />
       )}
-
-      {compareList.length > 0 && (
-        <div style={{ marginTop: "20px" }}>
-          {compareList.map((product) => (
-            <button
-              key={product._id}
-              onClick={() => handleAddToCart(product._id)}
-              className="add-to-cart-btn"
-              style={{
-                margin: "5px",
-                padding: "10px",
-                backgroundColor: "#4CAF50",
-                color: "white",
-                border: "none",
-                cursor: "pointer",
-              }}
-            >
-              Add {product.name} to Cart
-            </button>
-          ))}
-        </div>
+      {acProducts.length > 0 && (
+        <ACTable
+          compareList={acProducts}
+          handleAddToCart={handleAddToCart}
+          handleRemoveProduct={handleRemoveProduct}
+        />
       )}
+      {tvProducts.length > 0 && (
+        <TvTable
+          compareList={tvProducts}
+          handleAddToCart={handleAddToCart}
+          handleRemoveProduct={handleRemoveProduct}
+        />
+      )}
+      {washingMachineProducts.length > 0 && (
+        <WashingMachineTable
+          compareList={washingMachineProducts}
+          handleAddToCart={handleAddToCart}
+          handleRemoveProduct={handleRemoveProduct}
+        />
+      )}
+      {laptopProducts.length > 0 && (
+        <LaptopTable
+          compareList={laptopProducts}
+          handleAddToCart={handleAddToCart}
+          handleRemoveProduct={handleRemoveProduct}
+        />
+      )}
+      {compareList.length === 0 && <p>No products in your comparison list.</p>}
     </div>
   );
 };
