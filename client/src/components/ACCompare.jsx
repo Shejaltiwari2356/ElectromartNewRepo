@@ -27,7 +27,7 @@ const ACTable = ({ compareList, handleAddToCart, handleRemoveProduct }) => {
                 <img
                   src={product.image}
                   alt={product.name}
-                  style={{ width: "100px", height: "auto" }} // Adjust size as needed
+                  style={{ width: "100px", height: "auto" }} 
                 />
                 <div style={{ marginTop: "5px" }}>{product.name}</div>
                 <div style={{ display: "flex", justifyContent: "center", marginTop: "5px" }}>
@@ -72,7 +72,6 @@ const ACTable = ({ compareList, handleAddToCart, handleRemoveProduct }) => {
   );
 };
 
-// Styles
 const cellStyle = {
   border: "1px solid #ddd",
   padding: "10px",

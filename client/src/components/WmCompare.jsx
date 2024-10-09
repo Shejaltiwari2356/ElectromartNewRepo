@@ -11,7 +11,7 @@ const WashingMachineTable = ({
         width: "100%",
         borderCollapse: "collapse",
         marginTop: "20px",
-        border: "1px solid #ddd", // Add border to the table
+        border: "1px solid #ddd", 
       }}
     >
       <thead style={{ backgroundColor: "#f2f2f2" }}>
@@ -20,9 +20,9 @@ const WashingMachineTable = ({
           {compareList.map((product) => (
             <th key={product._id} style={cellStyle}>
               <img
-                src={product.image} // Assuming the product object has an 'image' field
+                src={product.image} 
                 alt={product.name}
-                style={{ width: "100px", height: "auto" }} // Adjust size as needed
+                style={{ width: "100px", height: "auto" }} 
               />
               <div>{product.name}</div>
               <div>
@@ -127,9 +127,9 @@ const WashingMachineTable = ({
 };
 
 const cellStyle = {
-  border: "1px solid #ddd", // Border for each cell
+  border: "1px solid #ddd", 
   padding: "8px",
-  textAlign: "center", // Center align text
+  textAlign: "center", 
 };
 
 export default WashingMachineTable;

@@ -25,7 +25,7 @@ const LaptopTable = ({ compareList, handleAddToCart, handleRemoveProduct }) => {
             {compareList.map((product) => (
               <th key={product._id} style={cellStyle}>
                 <img
-                  src={product.image} // Assuming the product object has an 'image' field
+                  src={product.image} 
                   alt={product.name}
                   style={imageStyle}
                 />
@@ -143,17 +143,17 @@ const LaptopTable = ({ compareList, handleAddToCart, handleRemoveProduct }) => {
   );
 };
 
-// Styles
+
 const cellStyle = {
-  border: "1px solid #ddd", // Add border to create lines in the table
+  border: "1px solid #ddd", 
   padding: "10px",
-  textAlign: "center", // Center align the text
+  textAlign: "center", 
   fontSize: "14px",
 };
 
 const imageStyle = {
-  width: "100px", // Set a fixed width for the product images
-  height: "auto", // Maintain aspect ratio
+  width: "100px", 
+  height: "auto", 
   borderRadius: "5px",
 };
 
