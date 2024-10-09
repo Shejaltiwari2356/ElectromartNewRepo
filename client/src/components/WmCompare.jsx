@@ -22,7 +22,7 @@ const WashingMachineTable = ({
               <img
                 src={product.image} 
                 alt={product.name}
-                style={{ width: "100px", height: "auto" }} 
+                style={{ width: "100px", height: "auto"  ,display: "block",margin: "0 auto" , marginBottom : "10px"}} 
               />
               <div>{product.name}</div>
               <div>
@@ -131,5 +131,6 @@ const cellStyle = {
   padding: "8px",
   textAlign: "center", 
 };
+
 
 export default WashingMachineTable;

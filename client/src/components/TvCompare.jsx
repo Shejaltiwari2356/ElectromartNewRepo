@@ -32,16 +32,16 @@ const TvTable = ({ compareList, handleAddToCart, handleRemoveProduct }) => {
                 <div style={{ marginTop: "10px" }}>{product.name}</div>
                 <div>
                   <button
-                    onClick={() => handleRemoveProduct(product._id)}
-                    style={buttonStyle("remove")}
-                  >
-                    Remove
-                  </button>
-                  <button
                     onClick={() => handleAddToCart(product._id)}
                     style={buttonStyle("add")}
                   >
                     Add to Cart
+                  </button>
+                  <button
+                    onClick={() => handleRemoveProduct(product._id)}
+                    style={buttonStyle("remove")}
+                  >
+                    Remove
                   </button>
                 </div>
               </th>
@@ -154,6 +154,9 @@ const imageStyle = {
   width: "100px", 
   height: "auto", 
   borderRadius: "5px",
+  display: "block",
+  margin: "0 auto" ,
+  marginBottom : "10px"
 };
 
 const buttonStyle = (type) => ({

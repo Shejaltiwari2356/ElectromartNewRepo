@@ -27,21 +27,21 @@ const ACTable = ({ compareList, handleAddToCart, handleRemoveProduct }) => {
                 <img
                   src={product.image}
                   alt={product.name}
-                  style={{ width: "100px", height: "auto" }} 
+                  style={{ width: "100px", height: "auto", display: "block", margin: "0 auto", marginBottom: "10px" }} 
                 />
                 <div style={{ marginTop: "5px" }}>{product.name}</div>
                 <div style={{ display: "flex", justifyContent: "center", marginTop: "5px" }}>
-                  <button
-                    onClick={() => handleRemoveProduct(product._id)}
-                    style={buttonStyle("remove")}
-                  >
-                    Remove
-                  </button>
                   <button
                     onClick={() => handleAddToCart(product._id)}
                     style={buttonStyle("add")}
                   >
                     Add to Cart
+                  </button>
+                  <button
+                    onClick={() => handleRemoveProduct(product._id)}
+                    style={buttonStyle("remove")}
+                  >
+                    Remove
                   </button>
                 </div>
               </th>
@@ -81,7 +81,7 @@ const cellStyle = {
 
 const buttonStyle = (type) => ({
   marginTop: "10px",
-  marginRight: "10px", 
+  marginRight: "10px",
   backgroundColor: type === "remove" ? "#ff4d4d" : "#4CAF50", 
   color: "white",
   border: "none",

@@ -37,24 +37,14 @@ const MobileTable = ({ compareList, handleRemoveProduct, handleAddToCart }) => {
                   height: "100px",
                   objectFit: "cover",
                   marginBottom: "10px",
+                  display: "block",
+                  margin: "0 auto" , 
+                  marginBottom : "10px"
                 }}
               />
               {product.name}
               <div>
-                <button
-                  onClick={() => handleRemoveProduct(product._id)}
-                  style={{
-                    marginTop: "10px",
-                    backgroundColor: "#ff4d4d",
-                    color: "white",
-                    border: "none",
-                    cursor: "pointer",
-                    padding: "5px 10px",
-                    borderRadius: "5px",
-                  }}
-                >
-                  Remove
-                </button>
+                
                 <button
                   onClick={() => handleAddToCart(product._id)}
                   style={{
@@ -69,6 +59,21 @@ const MobileTable = ({ compareList, handleRemoveProduct, handleAddToCart }) => {
                   }}
                 >
                   Add to Cart
+                </button>
+                <button
+                  onClick={() => handleRemoveProduct(product._id)}
+                  style={{
+                    marginTop: "10px",
+                    backgroundColor: "#ff4d4d",
+                    color: "white",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: "5px 10px",
+                    borderRadius: "5px",
+                    marginLeft:"10px"
+                  }}
+                >
+                  Remove
                 </button>
               </div>
             </th>
