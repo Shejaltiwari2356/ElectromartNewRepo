@@ -7,15 +7,24 @@ const WashingMachineTable = ({
 }) => {
   return (
     <table
-      style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}
+      style={{
+        width: "100%",
+        borderCollapse: "collapse",
+        marginTop: "20px",
+        border: "1px solid #ddd", // Add border to the table
+      }}
     >
       <thead style={{ backgroundColor: "#f2f2f2" }}>
         <tr>
-          <th style={cellStyle}>Image</th>
           <th style={cellStyle}>Specification</th>
           {compareList.map((product) => (
             <th key={product._id} style={cellStyle}>
-              {product.name}
+              <img
+                src={product.image} // Assuming the product object has an 'image' field
+                alt={product.name}
+                style={{ width: "100px", height: "auto" }} // Adjust size as needed
+              />
+              <div>{product.name}</div>
               <div>
                 <button
                   onClick={() => handleRemoveProduct(product._id)}
@@ -53,86 +62,63 @@ const WashingMachineTable = ({
       </thead>
       <tbody>
         <tr>
-          <td colSpan={1}></td> {/* Empty cell for header alignment */}
-          <td>Brand</td>
+          <td style={cellStyle}>Brand</td>
           {compareList.map((product) => (
-            <td key={product._id}>{product.brand}</td>
+            <td key={product._id} style={cellStyle}>{product.brand}</td>
           ))}
         </tr>
         <tr>
-          <td colSpan={1}></td>
-          <td>Original Price</td>
+          <td style={cellStyle}>Original Price</td>
           {compareList.map((product) => (
-            <td key={product._id}>{product.originalprice}</td>
+            <td key={product._id} style={cellStyle}>{product.originalprice}</td>
           ))}
         </tr>
         <tr>
-          <td colSpan={1}></td>
-          <td>Offer Price</td>
+          <td style={cellStyle}>Offer Price</td>
           {compareList.map((product) => (
-            <td key={product._id}>{product.offerprice}</td>
+            <td key={product._id} style={cellStyle}>{product.offerprice}</td>
           ))}
         </tr>
         <tr>
-          <td colSpan={1}></td>
-          <td>Discount</td>
+          <td style={cellStyle}>Discount</td>
           {compareList.map((product) => (
-            <td key={product._id}>{product.discount}</td>
+            <td key={product._id} style={cellStyle}>{product.discount}</td>
           ))}
         </tr>
         <tr>
-          <td colSpan={1}></td>
-          <td>Rating</td>
+          <td style={cellStyle}>Rating</td>
           {compareList.map((product) => (
-            <td key={product._id}>{product.rating}</td>
+            <td key={product._id} style={cellStyle}>{product.rating}</td>
           ))}
         </tr>
         <tr>
-          <td colSpan={1}></td>
-          <td>Capacity</td>
+          <td style={cellStyle}>Capacity</td>
           {compareList.map((product) => (
-            <td key={product._id}>{product.capacity}</td>
+            <td key={product._id} style={cellStyle}>{product.capacity}</td>
           ))}
         </tr>
         <tr>
-          <td colSpan={1}></td>
-          <td>Color</td>
+          <td style={cellStyle}>Color</td>
           {compareList.map((product) => (
-            <td key={product._id}>{product.color}</td>
+            <td key={product._id} style={cellStyle}>{product.color}</td>
           ))}
         </tr>
         <tr>
-          <td colSpan={1}></td>
-          <td>Special Features</td>
+          <td style={cellStyle}>Special Features</td>
           {compareList.map((product) => (
-            <td key={product._id}>{product.specialFeature}</td>
+            <td key={product._id} style={cellStyle}>{product.specialFeatures}</td>
           ))}
         </tr>
         <tr>
-          <td colSpan={1}></td>
-          <td>Maximum Rotational Speed</td>
+          <td style={cellStyle}>Maximum Rotational Speed</td>
           {compareList.map((product) => (
-            <td key={product._id}>{product.maximumRotationalSpeed}</td>
+            <td key={product._id} style={cellStyle}>{product.maximumRotationalSpeed}</td>
           ))}
         </tr>
         <tr>
-          <td colSpan={1}></td>
-          <td>Access Location</td>
+          <td style={cellStyle}>Access Location</td>
           {compareList.map((product) => (
-            <td key={product._id}>{product.accessLocation}</td>
-          ))}
-        </tr>
-        <tr>
-          <td colSpan={1}></td>
-          <td>Image</td>
-          {compareList.map((product) => (
-            <td key={product._id} style={{ textAlign: "center" }}>
-              <img
-                src={product.image}
-                alt={product.name}
-                style={{ width: "100px", height: "auto" }} // Adjust size as needed
-              />
-            </td>
+            <td key={product._id} style={cellStyle}>{product.accessLocation}</td>
           ))}
         </tr>
       </tbody>
@@ -141,9 +127,9 @@ const WashingMachineTable = ({
 };
 
 const cellStyle = {
-  border: "1px solid #ddd",
+  border: "1px solid #ddd", // Border for each cell
   padding: "8px",
-  textAlign: "center",
+  textAlign: "center", // Center align text
 };
 
 export default WashingMachineTable;

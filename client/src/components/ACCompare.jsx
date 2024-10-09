@@ -19,14 +19,18 @@ const ACTable = ({ compareList, handleAddToCart, handleRemoveProduct }) => {
           overflow: "hidden",
         }}
       >
-        <thead style={{ backgroundColor: "#007bff", color: "#ffffff" }}>
+        <thead style={{ backgroundColor: "#f2f2f2", color: "#000" }}>
           <tr>
-            <th style={cellStyle}>Image</th>
             <th style={cellStyle}>Specification</th>
             {compareList.map((product) => (
               <th key={product._id} style={cellStyle}>
-                {product.name}
-                <div>
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  style={{ width: "100px", height: "auto" }} // Adjust size as needed
+                />
+                <div style={{ marginTop: "5px" }}>{product.name}</div>
+                <div style={{ display: "flex", justifyContent: "center", marginTop: "5px" }}>
                   <button
                     onClick={() => handleRemoveProduct(product._id)}
                     style={buttonStyle("remove")}
@@ -45,75 +49,23 @@ const ACTable = ({ compareList, handleAddToCart, handleRemoveProduct }) => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td colSpan={1}></td>
-            <td>Brand</td>
-            {compareList.map((product) => (
-              <td key={product._id}>{product.brand}</td>
-            ))}
-          </tr>
-          <tr>
-            <td colSpan={1}></td>
-            <td>Original Price</td>
-            {compareList.map((product) => (
-              <td key={product._id}>{product.originalprice}</td>
-            ))}
-          </tr>
-          <tr>
-            <td colSpan={1}></td>
-            <td>Offer Price</td>
-            {compareList.map((product) => (
-              <td key={product._id}>{product.offerprice}</td>
-            ))}
-          </tr>
-          <tr>
-            <td colSpan={1}></td>
-            <td>Discount</td>
-            {compareList.map((product) => (
-              <td key={product._id}>{product.discount}</td>
-            ))}
-          </tr>
-          <tr>
-            <td colSpan={1}></td>
-            <td>Rating</td>
-            {compareList.map((product) => (
-              <td key={product._id}>{product.rating}</td>
-            ))}
-          </tr>
-          <tr>
-            <td colSpan={1}></td>
-            <td>Capacity</td>
-            {compareList.map((product) => (
-              <td key={product._id}>{product.capacityAC}</td>
-            ))}
-          </tr>
-          <tr>
-            <td colSpan={1}></td>
-            <td>Energy Rating</td>
-            {compareList.map((product) => (
-              <td key={product._id}>{product.energy_rating}</td>
-            ))}
-          </tr>
-          <tr>
-            <td colSpan={1}></td>
-            <td>Type</td>
-            {compareList.map((product) => (
-              <td key={product._id}>{product.type}</td>
-            ))}
-          </tr>
-          <tr>
-            <td colSpan={1}></td>
-            <td>Image</td>
-            {compareList.map((product) => (
-              <td key={product._id} style={{ textAlign: "center" }}>
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  style={{ width: "100px", height: "auto" }} // Adjust size as needed
-                />
-              </td>
-            ))}
-          </tr>
+          {[
+            { label: "Brand", key: "brand" },
+            { label: "Original Price", key: "originalprice" },
+            { label: "Offer Price", key: "offerprice" },
+            { label: "Discount", key: "discount" },
+            { label: "Rating", key: "rating" },
+            { label: "Capacity", key: "capacityAC" },
+            { label: "Energy Rating", key: "energy_rating" },
+            { label: "Type", key: "type" },
+          ].map((spec) => (
+            <tr key={spec.label}>
+              <td style={cellStyle}>{spec.label}</td>
+              {compareList.map((product) => (
+                <td key={product._id} style={cellStyle}>{product[spec.key]}</td>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
@@ -130,7 +82,8 @@ const cellStyle = {
 
 const buttonStyle = (type) => ({
   marginTop: "10px",
-  backgroundColor: type === "remove" ? "#ff4d4d" : "#28a745",
+  marginRight: "10px", 
+  backgroundColor: type === "remove" ? "#ff4d4d" : "#4CAF50", 
   color: "white",
   border: "none",
   cursor: "pointer",
